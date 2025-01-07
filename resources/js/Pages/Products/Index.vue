@@ -1,6 +1,6 @@
 <script>
     export default {
-    name: 'DishesIndex'
+    name: 'ProductsIndex'
     }
 </script>
 
@@ -13,7 +13,7 @@ import Spinner from './../../Components/Spinner/Spinner.vue';
 // import { usePage } from '@inertiajs/vue3';
 
 const props = defineProps({
-    dishes: {
+    products: {
         type: Object,
         required: false
         
@@ -35,9 +35,9 @@ const props = defineProps({
     },
 })
 
-// const dishes = ref(props.dishes);
+// const products = ref(props.products);
 // const {  inertia } = usePage();
-const dishes = computed(() => props.dishes);
+const products = computed(() => props.products);
 const categories = computed(() => props.categories);
 const subcategories = computed(() => props.subcategories);
 const showModal = ref(false);
@@ -76,7 +76,7 @@ const filteredSubcategories = computed(() => {
 
 const applyFilters = () => {
     isLoading.value = true;
-    Inertia.get(route('dishes.index'), filters.value, {
+    Inertia.get(route('products.index'), filters.value, {
         onSuccess: () => {
             isLoading.value = false;
         },
@@ -99,11 +99,11 @@ watch(filters, () => {
     applyFilters();   
 });
 
-// const filteredDishes = computed(() => {
-//     return dishes.value.filter(dish => {
-//         const matchesCategory = !filters.value.category_id || dish.category_id === parseInt(filters.value.category_id);
-//         const matchesSubcategory = !filters.value.subcategory_id || dish.data.subcategory_id === parseInt(filters.value.subcategory_id);
-//         const matchesSearch = !filters.value.search || dish.data.name.toLowerCase().includes(filters.value.search.toLowerCase());
+// const filteredProducts = computed(() => {
+//     return products.value.filter(product => {
+//         const matchesCategory = !filters.value.category_id || product.category_id === parseInt(filters.value.category_id);
+//         const matchesSubcategory = !filters.value.subcategory_id || product.data.subcategory_id === parseInt(filters.value.subcategory_id);
+//         const matchesSearch = !filters.value.search || product.data.name.toLowerCase().includes(filters.value.search.toLowerCase());
 //         return matchesCategory && matchesSubcategory && matchesSearch;
 //     });
 // });
@@ -113,20 +113,20 @@ const removeAccents = (str) => {
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 };
 
-const filteredDishes = computed(() => {
-    return dishes.value.filter(dish => {
-        const matchesCategory = !filters.value.category_id || dish.category_id === parseInt(filters.value.category_id);
-        const matchesSubcategory = !filters.value.subcategory_id || dish.data.subcategory_id === parseInt(filters.value.subcategory_id);
+const filteredProducts = computed(() => {
+    return products.value.filter(product => {
+        const matchesCategory = !filters.value.category_id || product.category_id === parseInt(filters.value.category_id);
+        const matchesSubcategory = !filters.value.subcategory_id || product.data.subcategory_id === parseInt(filters.value.subcategory_id);
         const search = filters.value.search ? removeAccents(filters.value.search.toLowerCase()) : '';
-        const dishName = removeAccents(dish.data.name.toLowerCase());
-        const matchesSearch = !search || dishName.includes(search);
+        const productName = removeAccents(product.data.name.toLowerCase());
+        const matchesSearch = !search || productName.includes(search);
         return matchesCategory && matchesSubcategory && matchesSearch;
     });
 });
 
-const visibleDishes = (dishes) => {
+const visibleProducts = (products) => {
     isLoading.value = true;
-	Inertia.put(`/dishes/${dishes.id}`, dishes,{
+	Inertia.put(`/products/${products.id}`, products,{
         onSuccess: () => {
             isLoading.value = false;
         },
@@ -136,9 +136,9 @@ const visibleDishes = (dishes) => {
     });
 }
 
-const deleteDishes = id => {
+const deleteProducts = id => {
     isLoading.value = true;
-    Inertia.delete(route('dishes.destroy', id),{
+    Inertia.delete(route('products.destroy', id),{
         onSuccess: () => {
             isLoading.value = false;
             isModalVisible.value = false;
@@ -153,13 +153,13 @@ const deleteDishes = id => {
 <template>
     <AppLayout>
         <template #header>
-            <h1 class="font-semibold text-xl text-gray-800 leading-tight">Platos</h1>
+            <h1 class="font-semibold text-xl text-gray-800 leading-tight">Productos</h1>
         </template>
         <div class="py-12 " >
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div class="flex flex-col lg:flex-row justify-between items-center mb-4">
-                            <span class="text-lg font-semibold">Platos</span>
+                            <span class="text-lg font-semibold">Productos</span>
                             <form @submit.prevent="applyFilters" class="w-full md:w-auto flex flex-col md:flex-row items-start md:items-center gap-2 mt-4 md:mt-0">
                                     <select v-model="filters.category_id" @change="applyFilters" class="border rounded px-3 pr-8 py-1 w-full md:w-auto">
                                         <option value="">Categoria</option>
@@ -170,11 +170,11 @@ const deleteDishes = id => {
                                         <option value="">Subcategoria</option>
                                         <option v-for="subcategory in filteredSubcategories" :key="subcategory.id" :value="subcategory.id">{{ subcategory.name }}</option>
                                     </select>
-                                    <input type="text" v-model="filters.search" placeholder="Buscar plato" class="border rounded px-2 py-1 w-full md:w-auto">
+                                    <input type="text" v-model="filters.search" placeholder="Buscar producto" class="border rounded px-2 py-1 w-full md:w-auto">
                                     <button type="button" @click="clearFilters" class="bg-gray-500 text-white px-4 py-2 rounded">Limpiar filtros</button>
                             </form>
-                            <Link :href="route('dishes.create')" class="bg-cyan-500 text-white rounded-lg px-4 py-2 mt-4 md:mt-2  lg:mt-0">
-                                Crear Platos
+                            <Link :href="route('products.create')" class="bg-cyan-500 text-white rounded-lg px-4 py-2 mt-4 md:mt-2  lg:mt-0">
+                                Crear Productos
                             </Link>
                     </div>
                 </div>
@@ -184,7 +184,7 @@ const deleteDishes = id => {
                             <table class="min-w-full bg-white">
                                 <thead>
                                     <tr>
-                                        <th class="w-2/6 px-4 py-2">Plato</th>
+                                        <th class="w-2/6 px-4 py-2">Producto</th>
                                         <th class="w-1/6 px-4 py-2 hidden sm:table-cell">Subcategoria</th>
                                         <th class="w-1/6 px-4 py-2 hidden sm:table-cell">Categoria</th>
                                         <th class="w-1/6 px-4 py-2 hidden sm:table-cell">Visible</th>
@@ -192,33 +192,33 @@ const deleteDishes = id => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr  v-for="dishe in filteredDishes" :key="dishe.id">
+                                    <tr  v-for="producto in filteredProducts" :key="producto.id">
                                         <td class="border  ">
                                             <p class="text-sm font-semibold leading-6 text-gray-900">
                                                 <div class="bg-white p-4  divide-y divide-dashed">
                                                     <div class="flex justify-between">
-                                                        <div class="font-bold text-gray-700">{{dishe.data.name}}</div>
-                                                        <div class="text-gray-700">${{dishe.data.price}}</div>
+                                                        <div class="font-bold text-gray-700">{{producto.data.name}}</div>
+                                                        <div class="text-gray-700">${{producto.data.price}}</div>
                                                     </div>
-                                                    <div class="text-gray-600">{{dishe.data.ingredients}}</div>
+                                                    <div class="text-gray-600">{{producto.data.description}}</div>
                                                 </div>
                                             </p>
                                         </td>
                                         <td class="border px-4  hidden sm:table-cell">
-                                            <p class="mt-1 truncate text-xs leading-5 text-gray-500">{{dishe.subcategory}}</p>
+                                            <p class="mt-1 truncate text-xs leading-5 text-gray-500">{{producto.subcategory}}</p>
                                                     
                                         </td>
                                         <td class="border px-4  hidden sm:table-cell">
-                                            <p class="mt-1 truncate text-xs leading-5 text-gray-500">{{dishe.category}}</p>
+                                            <p class="mt-1 truncate text-xs leading-5 text-gray-500">{{producto.category}}</p>
                                                     
                                         </td>
                                         <td class="border px-4  hidden sm:table-cell">
                                             <p class="text-sm font-semibold leading-6 text-gray-900">
                                                 <div>
                                                     <input type="checkbox" 
-                                                        :checked="dishe.data.visible"
-                                                        @change="visibleDishes(dishe.data)"
-                                                        v-model="dishe.data.visible" 
+                                                        :checked="producto.data.visible"
+                                                        @change="visibleProducts(producto.data)"
+                                                        v-model="producto.data.visible" 
                                                         :true-value="1"
                                                         :false-value="0" 
                                                         />
@@ -227,10 +227,10 @@ const deleteDishes = id => {
                                         </td>
                                         <td class=" border  ">
                                             <div class="  px-2 md:py-6  flex flex-col md:flex-row justify-around  items-center md:gap-2 gap-3">
-                                                <Link :href="route('dishes.edit', dishe.id)">
+                                                <Link :href="route('products.edit', producto.id)">
                                                     <img src="../../../../storage/app/public/iconos/editar.png" class="max-w-9 mx-auto " alt="editar" srcset="">
                                                 </Link>
-                                                <button @click="openModalDelete(dishe.id)">
+                                                <button @click="openModalDelete(producto.id)">
                                                     <img src="../../../../storage/app/public/iconos/basura.svg" class="max-w-9 mx-auto " alt="eliminar" srcset="">
                                                 </button>
                                             </div>
@@ -259,10 +259,10 @@ const deleteDishes = id => {
                         <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                             <div class="sm:flex sm:items-start">
                                 <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                                    <h3 class="text-lg leading-6 font-medium text-gray-900">Eliminar Plato</h3>
+                                    <h3 class="text-lg leading-6 font-medium text-gray-900">Eliminar Producto</h3>
                                     <div class="mt-2">
                                         <p class="text-sm text-gray-500">
-                                            Se eliminará el plato seleccionado
+                                            Se eliminará el producto seleccionado
                                         </p>
                                         
                                     </div>
@@ -272,7 +272,7 @@ const deleteDishes = id => {
                         <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                             <button @click="closeModal" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 my-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">Cancelar</button>
                         
-                            <button @click="deleteDishes(modalDataID)" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 my-2 py-2 bg-red-600 shadow-lg shadow-red-600 hover:bg-red-700 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">Eliminar</button>
+                            <button @click="deleteProducts(modalDataID)" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 my-2 py-2 bg-red-600 shadow-lg shadow-red-600 hover:bg-red-700 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">Eliminar</button>
                         </div>
                     </div>
                 </div>

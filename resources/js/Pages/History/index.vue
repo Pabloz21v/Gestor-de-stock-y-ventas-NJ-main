@@ -93,23 +93,23 @@ const closeModal = () => {
                                         </td>
                                         <td class="border px-4 py-2 hidden sm:table-cell">
                                             <div class="mt-1 truncate text-xs leading-5 text-gray-500">
-                                                <div v-if="history.action == 'crear' && history.entity_type == 'plato'   ">
+                                                <div v-if="history.action == 'crear' && history.entity_type == 'producto'   ">
                                                     <p>Nombre: {{ history.data.name }}</p>
                                                     <p>Precio: {{ history.data.price }}</p>
-                                                    <p>Ingredientes: {{ history.data.ingredients }}</p>
+                                                    <p>Comentarios: {{ history.data.description }}</p>
                                                     <p v-if="history.data.visible == '1'">Visible</p>
                                                     <p v-else>Invisible</p>
                                                 </div>
 
-                                                <div v-if="history.action == 'eliminar' && history.entity_type == 'plato' ">
+                                                <div v-if="history.action == 'eliminar' && history.entity_type == 'producto' ">
                                                     <p>Nombre: {{ history.data.name }}</p>
                                                     <p>Precio: {{ history.data.price }}</p>
-                                                    <p>Ingredientes: {{ history.data.ingredients }}</p>
+                                                    <p>Comentarios: {{ history.data.description }}</p>
                                                     <p v-if="history.data.visible == '1'">Visible</p>
                                                     <p v-else>Invisible</p>
                                                 </div>
 
-                                                <div v-if="history.action == 'actualizar' && history.entity_type == 'plato' ">
+                                                <div v-if="history.action == 'actualizar' && history.entity_type == 'producto' ">
                                                         <div v-if="history.data.new.name != history.data.old.name">
                                                             <p class="font-semibold">Cambio de nombre</p>
                                                             <p>{{history.data.old.name}} -> {{history.data.new.name}} </p>
@@ -118,9 +118,9 @@ const closeModal = () => {
                                                             <p class="font-semibold">Cambio de precio</p>
                                                             <p>{{history.data.old.price}} -> {{history.data.new.price}} </p>
                                                         </div>
-                                                        <div v-if="history.data.new.ingredients != history.data.old.ingredients">
-                                                            <p class="font-semibold">Cambio de ingredientes</p>
-                                                            <p>{{history.data.old.ingredients}} -> {{history.data.new.ingredients}} </p>
+                                                        <div v-if="history.data.new.description != history.data.old.description">
+                                                            <p class="font-semibold">Cambio de productos</p>
+                                                            <p>{{history.data.old.description}} -> {{history.data.new.description}} </p>
                                                         </div>
                                                         <div v-if="history.data.new.visible != history.data.old.visible">
                                                             <p class="font-semibold">Ahora es:</p>
@@ -250,23 +250,23 @@ const closeModal = () => {
                                             <strong>Acción:</strong> {{ modalData.action }}<br>
                                             <strong>Datos:</strong>
                                             
-                                                <div v-if="modalData.action == 'crear' && modalData.entity_type == 'plato'   ">
+                                                <div v-if="modalData.action == 'crear' && modalData.entity_type == 'producto'   ">
                                                     <p>Nombre: {{ modalData.data.name }}</p>
                                                     <p>Precio: {{ modalData.data.price }}</p>
-                                                    <p>Ingredientes: {{ modalData.data.ingredients }}</p>
+                                                    <p>Comentarios: {{ modalData.data.description }}</p>
                                                     <p v-if="modalData.data.visible == '1'">Visible</p>
                                                     <p v-else>Invisible</p>
                                                 </div>
 
-                                                <div v-if="modalData.action == 'eliminar' && modalData.entity_type == 'plato' ">
+                                                <div v-if="modalData.action == 'eliminar' && modalData.entity_type == 'producto' ">
                                                     <p>Nombre: {{ modalData.data.name }}</p>
                                                     <p>Precio: {{ modalData.data.price }}</p>
-                                                    <p>Ingredientes: {{ modalData.data.ingredients }}</p>
+                                                    <p>Comentarios: {{ modalData.data.description }}</p>
                                                     <p v-if="modalData.data.visible == '1'">Visible</p>
                                                     <p v-else>Invisible</p>
                                                 </div>
 
-                                                <div v-if="modalData.action == 'actualizar' && modalData.entity_type == 'plato' ">
+                                                <div v-if="modalData.action == 'actualizar' && modalData.entity_type == 'producto' ">
                                                         <div v-if="modalData.data.new.name != modalData.data.old.name">
                                                             <p class="font-semibold">Cambio de nombre</p>
                                                             <p>{{modalData.data.old.name}} -> {{modalData.data.new.name}} </p>
@@ -275,9 +275,9 @@ const closeModal = () => {
                                                             <p class="font-semibold">Cambio de precio</p>
                                                             <p>{{modalData.data.old.price}} -> {{modalData.data.new.price}} </p>
                                                         </div>
-                                                        <div v-if="modalData.data.new.ingredients != modalData.data.old.ingredients">
-                                                            <p class="font-semibold">Cambio de ingredientes</p>
-                                                            <p>{{modalData.data.old.ingredients}} -> {{modalData.data.new.ingredients}} </p>
+                                                        <div v-if="modalData.data.new.description != modalData.data.old.description">
+                                                            <p class="font-semibold">Cambio de productos</p>
+                                                            <p>{{modalData.data.old.description}} -> {{modalData.data.new.description}} </p>
                                                         </div>
                                                         <div v-if="modalData.data.new.visible != modalData.data.old.visible">
                                                             <p class="font-semibold">Ahora es:</p>

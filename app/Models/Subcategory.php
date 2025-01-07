@@ -25,8 +25,8 @@ class Subcategory extends Model
         return $this->belongsTo(Categories::class);
     }
 
-    public function dishes()
+    public function products()
     {
-        return $this->hasMany(Dishes::class);
+        return $this->hasMany(Products::class);
     }
 }

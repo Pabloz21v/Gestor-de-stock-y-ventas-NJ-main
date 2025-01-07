@@ -7,6 +7,7 @@ use App\Models\Backups;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+
 class BackupsController extends Controller
 {
     public function index()
@@ -20,39 +21,39 @@ class BackupsController extends Controller
     {
         // Lógica para crear un punto de guardado
         // Por ejemplo, podrías llamar a un comando de Artisan que realice la tarea de backup
-        
+
         Artisan::call('app:backup:tables');
-        
+
         return redirect()->route('backups.index');
     }
 
     public function restore($id)
     {
-    
+
         $backup = Backups::find($id);
         $data = json_decode($backup->data, true);
 
-        
+
 
         DB::beginTransaction();
-        
+
         try {
             // Desactivar restricciones de claves foráneas
             DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-            
+
             // Truncar las tablas
             DB::table('categories')->truncate();
             DB::table('subcategories')->truncate();
-            DB::table('dishes')->truncate();
-            
+            DB::table('products')->truncate();
+
             // Reactivar restricciones de claves foráneas
             DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-            
+
             // Insertar los datos desde el backup
             DB::table('categories')->insert($data['categories']);
             DB::table('subcategories')->insert($data['subcategories']);
-            DB::table('dishes')->insert($data['dishes']);
-            
+            DB::table('products')->insert($data['products']);
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();

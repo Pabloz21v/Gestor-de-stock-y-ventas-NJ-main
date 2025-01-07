@@ -6,7 +6,7 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use App\Models\Dishes;
+use App\Models\Products;
 use App\Models\Subcategory;
 use App\Models\Categories;
 
@@ -18,19 +18,19 @@ class DashboardController extends Controller
 
         return Inertia::render('Welcome', [
             'canLogin' => Route::has('login'),
-            // 'categories' => Categories::with('subcategories.dishes')->get(),
+            // 'categories' => Categories::with('subcategories.products')->get(),
 
-            // Ordena categories por orden, subcategories por orden y dishes por nombre
+            // Ordena categories por orden, subcategories por orden y products por nombre
             'categories' => Categories::with(['subcategories' => function ($query) {
                 $query->orderBy('orden');
-            }, 'subcategories.dishes' => function ($query) {
+            }, 'subcategories.products' => function ($query) {
                 $query->orderBy('name');
             }])->orderBy('orden')->get(),
 
             // $sortOrder = $request->query('sortOrder', 'name'); // Default sort order is 'name'
             // 'categories' => Categories::with(['subcategories' => function ($query) use ($sortOrder) {
             //     $query->orderBy($sortOrder);
-            // }, 'subcategories.dishes' => function ($query) use ($sortOrder) {
+            // }, 'subcategories.products' => function ($query) use ($sortOrder) {
             //     $query->orderBy($sortOrder);
             // }])->orderBy($sortOrder)->get(),
 
@@ -38,7 +38,7 @@ class DashboardController extends Controller
 
             'laravelVersion' => Application::VERSION,
             'phpVersion' => PHP_VERSION,
-            // 'dishes' => Dishes::with(['subcategories.categories'])->get(),
+            // 'products' => Products::with(['subcategories.categories'])->get(),
             // 'subcategory' => Subcategory::with('categories')->get(),
             // 'canRegister' => Route::has('register'),
         ]);
@@ -46,10 +46,10 @@ class DashboardController extends Controller
 
     public function dashboard(Request $request)
     {
-        // Ordena categories por orden, subcategories por orden y dishes por nombre
+        // Ordena categories por orden, subcategories por orden y products por nombre
         $categories = Categories::with(['subcategories' => function ($query) {
             $query->orderBy('orden');
-        }, 'subcategories.dishes' => function ($query) {
+        }, 'subcategories.products' => function ($query) {
             $query->orderBy('name');
         }])->orderBy('orden')->get();
 
@@ -57,7 +57,7 @@ class DashboardController extends Controller
         // $sortOrder = $request->query('sortOrder', 'name'); // Default sort order is 'name'
         // $categories = Categories::with(['subcategories' => function ($query) use ($sortOrder) {
         //     $query->orderBy($sortOrder);
-        // }, 'subcategories.dishes' => function ($query) use ($sortOrder) {
+        // }, 'subcategories.products' => function ($query) use ($sortOrder) {
         //     $query->orderBy($sortOrder);
         // }])->orderBy($sortOrder)->get();
 

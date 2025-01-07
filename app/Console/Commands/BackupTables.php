@@ -22,7 +22,7 @@ class BackupTables extends Command
      * @var string
      */
     // protected $description = 'Command description';
-    protected $description = 'Backup de las tablas de categorias, subcategorias y platos';
+    protected $description = 'Backup de las tablas de categorias, subcategorias y productos';
 
     /**
      * Execute the console command.
@@ -31,12 +31,12 @@ class BackupTables extends Command
     {
         $categories = DB::table('categories')->get();
         $subcategories = DB::table('subcategories')->get();
-        $dishes = DB::table('dishes')->get();
+        $products = DB::table('products')->get();
 
         $data = [
             'categories' => $categories,
             'subcategories' => $subcategories,
-            'dishes' => $dishes,
+            'products' => $products,
         ];
 
         Backups::create([

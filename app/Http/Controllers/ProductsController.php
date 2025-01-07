@@ -2,54 +2,55 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Dishes;
+use App\Models\Products;
 use App\Models\Subcategory;
 use App\Models\Categories;
 use Illuminate\Http\Request;
 use Inertia\Response;
 use Illuminate\Support\Facades\Auth;
 use App\Models\History;
-use App\Http\Requests\DisheRequest;
-class DishesController extends Controller
+use App\Http\Requests\ProductRequest;
+
+class ProductsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        
+
 
         $query = Categories::with(['subcategories' => function ($query) {
             $query->orderBy('orden');
-        }, 'subcategories.dishes' => function ($query) use ($request) {
+        }, 'subcategories.products' => function ($query) use ($request) {
             if ($request->filled('search')) {
                 $query->where('name', 'like', '%' . $request->search . '%');
             }
             $query->orderBy('name');
         }])->orderBy('orden');
-    
+
         if ($request->filled('category_id')) {
             $query->where('id', $request->category_id);
         }
-    
+
         if ($request->filled('subcategory_id')) {
             $query->whereHas('subcategories', function ($q) use ($request) {
                 $q->where('id', $request->subcategory_id);
             });
         }
-    
+
         $categories = $query->get();
-        $filteredCategories =[];
+        $filteredCategories = [];
         $filteredSubcategories = [];
-        $filteredDishes = [];
+        $filteredProducts = [];
         foreach ($categories as $category) {
             $filteredCategories[] = $category;
             foreach ($category->subcategories as $subcategory) {
                 $filteredSubcategories[] = $subcategory;
-                foreach ($subcategory->dishes as $dish) {
-                    $filteredDishes[] = [
-                        'id' => $dish->id,
-                        'data' => $dish,
+                foreach ($subcategory->products as $product) {
+                    $filteredProducts[] = [
+                        'id' => $product->id,
+                        'data' => $product,
                         'subcategory' => $subcategory->name,
                         'category' => $category->name,
                         'category_id' => $category->id,
@@ -58,10 +59,10 @@ class DishesController extends Controller
             }
         }
 
-        return Inertia('Dishes/Index', [
+        return Inertia('Products/Index', [
             'categories' => $filteredCategories,
             'subcategories' => $filteredSubcategories,
-            'dishes' => $filteredDishes,
+            'products' => $filteredProducts,
             'filters' => $request->only(['categories_id', 'subcategory_id', 'search'])
         ]);
     }
@@ -73,27 +74,27 @@ class DishesController extends Controller
     {
         $subcategories = Subcategory::with('categories')->get();
         $categories = Categories::with('subcategories')->get();
-        return inertia('Dishes/Create', ['subcategories' => $subcategories, 'categories' => $categories]);
+        return inertia('Products/Create', ['subcategories' => $subcategories, 'categories' => $categories]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(DisheRequest $request)
+    public function store(ProductRequest $request)
     {
-        
 
-        $dishe = Dishes::create($request->validated());
+
+        $producto = Products::create($request->validated());
         $user = Auth::user();
         $fullname = $user->apellido . " " . $user->name;
-        $this->createHistory($fullname, $user->cargo, 'plato', 'crear', $dishe->toArray());
-        return redirect()->route('dishes.index');
+        $this->createHistory($fullname, $user->cargo, 'producto', 'crear', $producto->toArray());
+        return redirect()->route('products.index')->with('success', 'Producto creado exitosamente.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Dishes $dishes)
+    public function show(Products $products)
     {
         //
     }
@@ -101,43 +102,43 @@ class DishesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request,  $disheID)
+    public function edit(Request $request,  $productoID)
     {
 
-        $dishe = Dishes::find($disheID);
+        $producto = Products::find($productoID);
         $subcategories = Subcategory::with('categories')->get();
         $categories = Categories::with('subcategories')->get();
-        return inertia('Dishes/Edit', ['dishe' => $dishe, 'categories' => $categories, 'subcategories' => $subcategories]);
+        return inertia('Products/Edit', ['producto' => $producto, 'categories' => $categories, 'subcategories' => $subcategories]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(DisheRequest $request,  $disheID)
+    public function update(ProductRequest $request,  $productoID)
     {
-        
-        $dishes = Dishes::find($disheID);
-        $oldData = $dishes->toArray();
+
+        $products = Products::find($productoID);
+        $oldData = $products->toArray();
         $user = Auth::user();
         $fullname = $user->apellido . " " . $user->name;
-        $dishes->update($request->validated());
-        $this->createHistory($fullname, $user->cargo, 'plato', 'actualizar', ['old' => $oldData, 'new' => $dishes->toArray()]);
-        return redirect()->route('dishes.index');
+        $products->update($request->validated());
+        $this->createHistory($fullname, $user->cargo, 'producto', 'actualizar', ['old' => $oldData, 'new' => $products->toArray()]);
+        return redirect()->route('products.index');
     }
 
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($dishesID)
+    public function destroy($productsID)
     {
-        $dishes = Dishes::find($dishesID);
-        $dishesDeleted = $dishes;
-        $dishes->delete();
+        $products = Products::find($productsID);
+        $productsDeleted = $products;
+        $products->delete();
         $user = Auth::user();
         $fullname = $user->apellido . " " . $user->name;
-        $this->createHistory($fullname, $user->cargo, 'plato', 'eliminar', $dishesDeleted);
-        return redirect()->route('dishes.index');
+        $this->createHistory($fullname, $user->cargo, 'producto', 'eliminar', $productsDeleted);
+        return redirect()->route('products.index');
     }
 
     private function createHistory($person, $cargo, $entityType, $action, $data)
@@ -151,6 +152,15 @@ class DishesController extends Controller
         ]);
 
         $this->checkHistoryLimit();
+    }
+
+    public function incrementarVentas($id)
+    {
+        $producto = Products::findOrFail($id);
+        $producto->increment('contador_ventas'); // Incrementar el contador de ventas
+        $producto->save();
+
+        return redirect()->back()->with('success', 'Venta registrada exitosamente.');
     }
 
     private function checkHistoryLimit()

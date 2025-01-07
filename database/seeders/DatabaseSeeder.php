@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Categories;
 use App\Models\Subcategory;
 use App\Models\User;
-use App\Models\Dishes;
+use App\Models\Products;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
             SubcategorySeeder::class,
-            DishesSeeder::class,
+            ProductsSeeder::class,
         ]);
     }
 }

@@ -7,7 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SubcategoryController;
-use App\Http\Controllers\DishesController;
+use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\BackupsController;
 
@@ -18,7 +18,7 @@ Route::permanentRedirect('/register', '/');
 
 
 // Route::get('/', function () {
-//     $categories = Categories::with('subcategories.dishes')->get();
+//     $categories = Categories::with('subcategories.products')->get();
 //     return Inertia::render('Menu', ['categories' => $categories]);
 // });
 
@@ -33,7 +33,7 @@ Route::middleware([
     Route::resource('/role', RoleController::class);
     Route::resource('/categories', CategoryController::class);
     Route::resource('/subcategories', SubcategoryController::class);
-    Route::resource('/dishes', DishesController::class);
+    Route::resource('/products', ProductsController::class);
     Route::resource('/history', HistoryController::class)->only(['index']);
     Route::resource('/backups', BackupsController::class);
     Route::post('/backups/{id}/restore', [BackupsController::class, 'restore'])->name('backups.restore');
