@@ -14,7 +14,6 @@ class ProductsSeeder extends Seeder
     public function run(): void
     {
         Products::create([
-            'codigo' => 'P001',
             'category_id' => 1,
             'subcategory_id' => 1,
             'visible' => true,
@@ -37,10 +36,10 @@ class ProductsSeeder extends Seeder
             'stock_maximo' => 300,
             'imagen_principal' => 'https://example.com/imagen_principal.jpg',
             'imagenes' => json_encode(['https://example.com/imagen1.jpg', 'https://example.com/imagen2.jpg']),
-            'video_url' => 'https://example.com/video.mp4',
+            'video' => 'https://example.com/video.mp4',
             'proveedores' => json_encode([['nombre' => 'Proveedor A', 'url' => 'https://proveedorA.com']]),
         ]);
-        Products::create(['codigo' => 'P002',
+        Products::create([
             'category_id' => 1,
             'subcategory_id' => 2,
             'visible' => true,
@@ -63,10 +62,10 @@ class ProductsSeeder extends Seeder
             'stock_maximo' => 200,
             'imagen_principal' => 'https://example.com/imagen_principal2.jpg',
             'imagenes' => json_encode(['https://example.com/imagen3.jpg', 'https://example.com/imagen4.jpg']),
-            'video_url' => 'https://example.com/video2.mp4',
+            'video' => 'https://example.com/video2.mp4',
             'proveedores' => json_encode([['nombre' => 'Proveedor B', 'url' => 'https://proveedorB.com']]),
         ]);
-        Products::create(['codigo' => 'P003',
+        Products::create([
             'category_id' => 2,
             'subcategory_id' => 3,
             'visible' => true,
@@ -89,10 +88,10 @@ class ProductsSeeder extends Seeder
             'stock_maximo' => 150,
             'imagen_principal' => 'https://example.com/imagen_principal3.jpg',
             'imagenes' => json_encode(['https://example.com/imagen5.jpg', 'https://example.com/imagen6.jpg']),
-            'video_url' => 'https://example.com/video3.mp4',
+            'video' => 'https://example.com/video3.mp4',
             'proveedores' => json_encode([['nombre' => 'Proveedor C', 'url' => 'https://proveedorC.com']]),
         ]);
-        Products::create(['codigo' => 'P004',
+        Products::create([
             'category_id' => 2,
             'subcategory_id' => 4,
             'visible' => true,
@@ -115,10 +114,10 @@ class ProductsSeeder extends Seeder
             'stock_maximo' => 180,
             'imagen_principal' => 'https://example.com/imagen_principal4.jpg',
             'imagenes' => json_encode(['https://example.com/imagen7.jpg', 'https://example.com/imagen8.jpg']),
-            'video_url' => 'https://example.com/video4.mp4',
+            'video' => 'https://example.com/video4.mp4',
             'proveedores' => json_encode([['nombre' => 'Proveedor D', 'url' => 'https://proveedorD.com']]),
         ]);
-        Products::create(['codigo' => 'P005',
+        Products::create([
             'category_id' => 3,
             'subcategory_id' => 5,
             'visible' => true,
@@ -141,10 +140,10 @@ class ProductsSeeder extends Seeder
             'stock_maximo' => 100,
             'imagen_principal' => 'https://example.com/imagen_principal5.jpg',
             'imagenes' => json_encode(['https://example.com/imagen9.jpg', 'https://example.com/imagen10.jpg']),
-            'video_url' => 'https://example.com/video5.mp4',
+            'video' => 'https://example.com/video5.mp4',
             'proveedores' => json_encode([['nombre' => 'Proveedor E', 'url' => 'https://proveedorE.com']]),
         ]);
-        Products::create(['codigo' => 'P006',
+        Products::create([
             'category_id' => 3,
             'subcategory_id' => 6,
             'visible' => true,
@@ -167,10 +166,10 @@ class ProductsSeeder extends Seeder
             'stock_maximo' => 120,
             'imagen_principal' => 'https://example.com/imagen_principal6.jpg',
             'imagenes' => json_encode(['https://example.com/imagen11.jpg', 'https://example.com/imagen12.jpg']),
-            'video_url' => 'https://example.com/video6.mp4',
+            'video' => 'https://example.com/video6.mp4',
             'proveedores' => json_encode([['nombre' => 'Proveedor F', 'url' => 'https://proveedorF.com']]),
         ]);
-        Products::create(['codigo' => 'P007',
+        Products::create([
             'category_id' => 4,
             'subcategory_id' => 7,
             'visible' => true,
@@ -193,10 +192,10 @@ class ProductsSeeder extends Seeder
             'stock_maximo' => 150,
             'imagen_principal' => 'https://example.com/imagen_principal7.jpg',
             'imagenes' => json_encode(['https://example.com/imagen13.jpg', 'https://example.com/imagen14.jpg']),
-            'video_url' => 'https://example.com/video7.mp4',
+            'video' => 'https://example.com/video7.mp4',
             'proveedores' => json_encode([['nombre' => 'Proveedor G', 'url' => 'https://proveedorG.com']]),
         ]);
-        Products::create(['codigo' => 'P008',
+        Products::create([
             'category_id' => 4,
             'subcategory_id' => 8,
             'visible' => true,
@@ -219,10 +218,10 @@ class ProductsSeeder extends Seeder
             'stock_maximo' => 160,
             'imagen_principal' => 'https://example.com/imagen_principal8.jpg',
             'imagenes' => json_encode(['https://example.com/imagen15.jpg', 'https://example.com/imagen16.jpg']),
-            'video_url' => 'https://example.com/video8.mp4',
+            'video' => 'https://example.com/video8.mp4',
             'proveedores' => json_encode([['nombre' => 'Proveedor H', 'url' => 'https://proveedorH.com']]),
         ]);
-        Products::create(['codigo' => 'P009',
+        Products::create([
             'category_id' => 5,
             'subcategory_id' => 9,
             'visible' => true,
@@ -245,10 +244,10 @@ class ProductsSeeder extends Seeder
             'stock_maximo' => 180,
             'imagen_principal' => 'https://example.com/imagen_principal9.jpg',
             'imagenes' => json_encode(['https://example.com/imagen17.jpg', 'https://example.com/imagen18.jpg']),
-            'video_url' => 'https://example.com/video9.mp4',
+            'video' => 'https://example.com/video9.mp4',
             'proveedores' => json_encode([['nombre' => 'Proveedor I', 'url' => 'https://proveedorI.com']]),
         ]);
-        Products::create(['codigo' => 'P010',
+        Products::create([
             'category_id' => 5,
             'subcategory_id' => 10,
             'visible' => true,
@@ -271,10 +270,10 @@ class ProductsSeeder extends Seeder
             'stock_maximo' => 200,
             'imagen_principal' => 'https://example.com/imagen_principal10.jpg',
             'imagenes' => json_encode(['https://example.com/imagen19.jpg', 'https://example.com/imagen20.jpg']),
-            'video_url' => 'https://example.com/video10.mp4',
+            'video' => 'https://example.com/video10.mp4',
             'proveedores' => json_encode([['nombre' => 'Proveedor J', 'url' => 'https://proveedorJ.com']]),
         ]);
-        Products::create(['codigo' => 'P011',
+        Products::create([
             'category_id' => 6,
             'subcategory_id' => 11,
             'visible' => true,
@@ -297,10 +296,10 @@ class ProductsSeeder extends Seeder
             'stock_maximo' => 210,
             'imagen_principal' => 'https://example.com/imagen_principal11.jpg',
             'imagenes' => json_encode(['https://example.com/imagen21.jpg', 'https://example.com/imagen22.jpg']),
-            'video_url' => 'https://example.com/video11.mp4',
+            'video' => 'https://example.com/video11.mp4',
             'proveedores' => json_encode([['nombre' => 'Proveedor K', 'url' => 'https://proveedorK.com']]),
         ]);
-        Products::create(['codigo' => 'P012',
+        Products::create([
             'category_id' => 6,
             'subcategory_id' => 12,
             'visible' => true,
@@ -323,10 +322,10 @@ class ProductsSeeder extends Seeder
             'stock_maximo' => 220,
             'imagen_principal' => 'https://example.com/imagen_principal12.jpg',
             'imagenes' => json_encode(['https://example.com/imagen23.jpg', 'https://example.com/imagen24.jpg']),
-            'video_url' => 'https://example.com/video12.mp4',
+            'video' => 'https://example.com/video12.mp4',
             'proveedores' => json_encode([['nombre' => 'Proveedor L', 'url' => 'https://proveedorL.com']]),
         ]);
-        Products::create(['codigo' => 'P013',
+        Products::create([
             'category_id' => 7,
             'subcategory_id' => 13,
             'visible' => true,
@@ -349,10 +348,10 @@ class ProductsSeeder extends Seeder
             'stock_maximo' => 230,
             'imagen_principal' => 'https://example.com/imagen_principal13.jpg',
             'imagenes' => json_encode(['https://example.com/imagen25.jpg', 'https://example.com/imagen26.jpg']),
-            'video_url' => 'https://example.com/video13.mp4',
+            'video' => 'https://example.com/video13.mp4',
             'proveedores' => json_encode([['nombre' => 'Proveedor M', 'url' => 'https://proveedorM.com']]),
         ]);
-        Products::create(['codigo' => 'P014',
+        Products::create([
             'category_id' => 7,
             'subcategory_id' => 14,
             'visible' => true,
@@ -375,10 +374,10 @@ class ProductsSeeder extends Seeder
             'stock_maximo' => 250,
             'imagen_principal' => 'https://example.com/imagen_principal14.jpg',
             'imagenes' => json_encode(['https://example.com/imagen27.jpg', 'https://example.com/imagen28.jpg']),
-            'video_url' => 'https://example.com/video14.mp4',
+            'video' => 'https://example.com/video14.mp4',
             'proveedores' => json_encode([['nombre' => 'Proveedor N', 'url' => 'https://proveedorN.com']]),
         ]);
-        Products::create(['codigo' => 'P015',
+        Products::create([
             'category_id' => 8,
             'subcategory_id' => 15,
             'visible' => true,
@@ -401,7 +400,7 @@ class ProductsSeeder extends Seeder
             'stock_maximo' => 260,
             'imagen_principal' => 'https://example.com/imagen_principal15.jpg',
             'imagenes' => json_encode(['https://example.com/imagen29.jpg', 'https://example.com/imagen30.jpg']),
-            'video_url' => 'https://example.com/video15.mp4',
+            'video' => 'https://example.com/video15.mp4',
             'proveedores' => json_encode([['nombre' => 'Proveedor O', 'url' => 'https://proveedorO.com']]),
         ]);
     }

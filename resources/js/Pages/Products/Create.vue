@@ -10,11 +10,30 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import ProductsForm from "@/Components/Products/Form.vue";
 
 const form = useForm({
+    category_id: "",
     subcategory_id: "",
-    name: "",
-    price: "",
-    description: "",
     visible: 1,
+    price: "",
+    ganancia: "",
+    descuento: "",
+    oferta: 0,
+    name: "",
+    description: "",
+    detalles: "",
+    marca: "",
+    tamaño: "",
+    color: "",
+    peso: "",
+    dimensiones: "",
+    stock: "",
+    contador_ventas: "",
+    stock_real: "",
+    stock_minimo: "",
+    stock_maximo: "",
+    imagen_principal: "",
+    imagenes: [],
+    video: "",
+    proveedores: "",
 });
 
 defineProps({
@@ -33,7 +52,7 @@ defineProps({
     <AppLayout>
         <template #header>
             <h1 class="font-semibold text-xl text-gray-800 leading-tigth">
-                Crear Producto
+                Creador de Productos
             </h1>
         </template>
 

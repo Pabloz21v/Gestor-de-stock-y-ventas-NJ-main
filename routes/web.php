@@ -38,4 +38,10 @@ Route::middleware([
     Route::resource('/backups', BackupsController::class);
     Route::post('/backups/{id}/restore', [BackupsController::class, 'restore'])->name('backups.restore');
     Route::post('/backups/createBackup', [BackupsController::class, 'createBackup'])->name('backups.createBackup');
+
+    // Route::delete('products/{producto}/imagen_principal', [ProductsController::class, 'deleteMainPhoto'])->name('products.deleteMainPhoto');
+
+    Route::delete('products/{producto}/imagen-principal', [ProductsController::class, 'deleteMainPhoto'])->name('products.deleteMainPhoto');
+    Route::delete('products/{producto}/video', [ProductsController::class, 'deleteVideo'])->name('products.deleteVideo');
+    Route::delete('products/{producto}/imagenes/{index}', [ProductsController::class, 'deleteExtraPhoto'])->name('products.deleteExtraPhoto');
 });

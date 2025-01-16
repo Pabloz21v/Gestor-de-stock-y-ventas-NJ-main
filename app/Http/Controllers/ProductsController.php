@@ -10,6 +10,7 @@ use Inertia\Response;
 use Illuminate\Support\Facades\Auth;
 use App\Models\History;
 use App\Http\Requests\ProductRequest;
+use Illuminate\Support\Facades\Storage;
 
 class ProductsController extends Controller
 {
@@ -82,12 +83,37 @@ class ProductsController extends Controller
      */
     public function store(ProductRequest $request)
     {
+        // Obtener el subcategory_id de la solicitud
+        $subcategoryId = $request->input('subcategory_id');
+        // Encontrar la subcategoría correspondiente
+        $subcategory = Subcategory::find($subcategoryId);
+        // Obtener el category_id de la subcategoría
+        $category_id = $subcategory->categories_id;
 
-
+        // dd($request);
         $producto = Products::create($request->validated());
+        $producto->category_id = $category_id;
+        // dd("store", $producto->category_id);
+        if ($request->hasFile('imagen_principal')) {
+            $producto->imagen_principal = Storage::putFile('photos', $request->file('imagen_principal'));
+        }
+
+        if ($request->hasFile('video')) {
+            $producto->video = Storage::putFile('videos', $request->file('video'));
+        }
+
+        if ($request->hasFile('imagenes')) {
+            $imagenes = [];
+            foreach ($request->file('imagenes') as $photo) {
+                $imagenes[] = Storage::putFile('photos', $photo);
+            }
+            $producto->imagenes = json_encode($imagenes);
+        }
         $user = Auth::user();
         $fullname = $user->apellido . " " . $user->name;
+        $producto->save();
         $this->createHistory($fullname, $user->cargo, 'producto', 'crear', $producto->toArray());
+
         return redirect()->route('products.index')->with('success', 'Producto creado exitosamente.');
     }
 
@@ -104,7 +130,6 @@ class ProductsController extends Controller
      */
     public function edit(Request $request,  $productoID)
     {
-
         $producto = Products::find($productoID);
         $subcategories = Subcategory::with('categories')->get();
         $categories = Categories::with('subcategories')->get();
@@ -116,11 +141,38 @@ class ProductsController extends Controller
      */
     public function update(ProductRequest $request,  $productoID)
     {
-
+        // dd("update");
+        // dd($request);
         $products = Products::find($productoID);
+        // dd($products);
         $oldData = $products->toArray();
         $user = Auth::user();
         $fullname = $user->apellido . " " . $user->name;
+
+
+        if ($request->hasFile('imagen_principal')) {
+            if ($products->imagen_principal) {
+                Storage::delete($products->imagen_principal);
+            }
+            $products->imagen_principal = Storage::putFile('photos', $request->file('imagen_principal'));
+        }
+
+        if ($request->hasFile('video')) {
+            if ($products->video) {
+                Storage::delete($products->video);
+            }
+            $products->video = Storage::putFile('videos', $request->file('video'));
+        }
+
+        if ($request->hasFile('imagenes')) {
+            $imagenes = [];
+            foreach ($request->file('imagenes') as $photo) {
+                $imagenes[] = Storage::putFile('photos', $photo);
+            }
+            $products->imagenes = json_encode($imagenes);
+        }
+
+
         $products->update($request->validated());
         $this->createHistory($fullname, $user->cargo, 'producto', 'actualizar', ['old' => $oldData, 'new' => $products->toArray()]);
         return redirect()->route('products.index');
@@ -134,6 +186,17 @@ class ProductsController extends Controller
     {
         $products = Products::find($productsID);
         $productsDeleted = $products;
+        if ($products->imagen_principal) {
+            Storage::delete($products->imagen_principal);
+        }
+        if ($products->video) {
+            Storage::delete($products->video);
+        }
+        if ($products->imagenes) {
+            foreach (json_decode($products->imagenes) as $photo) {
+                Storage::delete($photo);
+            }
+        }
         $products->delete();
         $user = Auth::user();
         $fullname = $user->apellido . " " . $user->name;
@@ -154,14 +217,14 @@ class ProductsController extends Controller
         $this->checkHistoryLimit();
     }
 
-    public function incrementarVentas($id)
-    {
-        $producto = Products::findOrFail($id);
-        $producto->increment('contador_ventas'); // Incrementar el contador de ventas
-        $producto->save();
+    // public function incrementarVentas($id)
+    // {
+    //     $producto = Products::findOrFail($id);
+    //     $producto->increment('contador_ventas'); // Incrementar el contador de ventas
+    //     $producto->save();
 
-        return redirect()->back()->with('success', 'Venta registrada exitosamente.');
-    }
+    //     return redirect()->back()->with('success', 'Venta registrada exitosamente.');
+    // }
 
     private function checkHistoryLimit()
     {
@@ -170,5 +233,23 @@ class ProductsController extends Controller
             $oldestHistory = History::orderBy('created_at', 'asc')->first();
             $oldestHistory->delete();
         }
+    }
+
+    public function deleteImagenPrincipal(Products $producto)
+    {
+        $producto->deleteImagenPrincipal();
+        return redirect()->route('products.edit', $producto->id);
+    }
+
+    public function deleteVideo(Products $producto)
+    {
+        $producto->deleteVideo();
+        return redirect()->route('products.edit', $producto->id);
+    }
+
+    public function deleteImagenes(Products $producto, $index)
+    {
+        $producto->deleteImagenes($index);
+        return redirect()->route('products.edit', $producto->id);
     }
 }

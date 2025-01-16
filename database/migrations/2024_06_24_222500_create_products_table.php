@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('codigo')->unique();
             $table->unsignedBigInteger('category_id')->constrained('categories');
             $table->unsignedBigInteger('subcategory_id')->nullable()->constrained('subcategories');
             $table->boolean('visible')->default(true);
@@ -21,44 +20,44 @@ return new class extends Migration
             // DINERO
             $table->decimal('price', 10, 2); //precio base del producto
             $table->decimal('ganancia', 10, 2)->nullable()->default(0); // % deseado de ganancia
-            $table->decimal('descuento', 5, 2)->default(0); // % de descuento
+            $table->decimal('descuento', 5, 2)->nullable()->default(0); // % de descuento
             $table->boolean('oferta')->default(false); // booleano para indicar que se aplica el descuento
 
             // caracteristicas del producto
             $table->string('name', 255); //nombre producto
             $table->text('description', 255)->nullable();
             $table->text('detalles')->nullable();
-            $table->string('marca');
+            $table->string('marca')->nullable();
             $table->string('tamaño')->nullable();
             $table->string('color')->nullable();
-            $table->decimal('peso', 8, 2)->nullable();
-            $table->json('dimensiones')->nullable();
-            
+            $table->string('peso')->nullable();
+            $table->text('dimensiones')->nullable();
+
             //STOCK
             $table->integer('stock')->default(0); // si se pide mas de lo que se tiene de stock_real
-            $table->string('contador_ventas'); // cuenta las ventas realizadas del producto
+            $table->integer('contador_ventas')->default(0); // cuenta las ventas realizadas del producto
             $table->integer('stock_real')->default(0);  //el que se tiene a disposicion
             $table->integer('stock_minimo')->default(0); //alertas de poco stock
             $table->integer('stock_maximo')->default(0); //alertas de sobreestock
-            
+
             // imagenes videos proveedores
             $table->string('imagen_principal')->nullable(); // URL de la imagen principal
             $table->json('imagenes')->nullable();
-            $table->string('video_url')->nullable(); // URL del video de presentación
-            $table->json('proveedores')->nullable(); // JSON para almacenar múltiples proveedores con sus URLs
-            
+            $table->string('video')->nullable(); // URL delvideo de presentación
+            $table->string('proveedores')->nullable(); //   almacenar múltiples proveedores con sus URLs
+
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('subcategory_id')
-            ->references('id')->on('subcategories')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
-            
+                ->references('id')->on('subcategories')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
             $table->foreign('category_id')
-            ->references('id')->on('categories')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
+                ->references('id')->on('categories')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
 
             // $table->decimal('calificacion_promedio', 2, 1)->default(0);
         });

@@ -99,14 +99,6 @@ watch(filters, () => {
     applyFilters();   
 });
 
-// const filteredProducts = computed(() => {
-//     return products.value.filter(product => {
-//         const matchesCategory = !filters.value.category_id || product.category_id === parseInt(filters.value.category_id);
-//         const matchesSubcategory = !filters.value.subcategory_id || product.data.subcategory_id === parseInt(filters.value.subcategory_id);
-//         const matchesSearch = !filters.value.search || product.data.name.toLowerCase().includes(filters.value.search.toLowerCase());
-//         return matchesCategory && matchesSubcategory && matchesSearch;
-//     });
-// });
 
 // elimina los acentos del buscador
 const removeAccents = (str) => {
@@ -187,12 +179,13 @@ const deleteProducts = id => {
                                         <th class="w-2/6 px-4 py-2">Producto</th>
                                         <th class="w-1/6 px-4 py-2 hidden sm:table-cell">Subcategoria</th>
                                         <th class="w-1/6 px-4 py-2 hidden sm:table-cell">Categoria</th>
+                                        <th class="w-1/6 px-4 py-2 hidden sm:table-cell">Marca</th>
                                         <th class="w-1/6 px-4 py-2 hidden sm:table-cell">Visible</th>
                                         <th class="w-1/6 px-4 py-2">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr  v-for="producto in filteredProducts" :key="producto.id">
+                                    <tr v-for="producto in filteredProducts" :key="producto.id">
                                         <td class="border  ">
                                             <p class="text-sm font-semibold leading-6 text-gray-900">
                                                 <div class="bg-white p-4  divide-y divide-dashed">
@@ -211,6 +204,9 @@ const deleteProducts = id => {
                                         <td class="border px-4  hidden sm:table-cell">
                                             <p class="mt-1 truncate text-xs leading-5 text-gray-500">{{producto.category}}</p>
                                                     
+                                        </td>
+                                        <td class="border px-4 hidden sm:table-cell">
+                                            <p class="mt-1 truncate text-xs leading-5 text-gray-500">{{ producto.data.marca }}</p>
                                         </td>
                                         <td class="border px-4  hidden sm:table-cell">
                                             <p class="text-sm font-semibold leading-6 text-gray-900">
