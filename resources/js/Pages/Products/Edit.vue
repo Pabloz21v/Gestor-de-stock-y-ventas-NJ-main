@@ -52,9 +52,9 @@ const form = useForm({
     proveedores: props.producto.proveedores,
 });
 
-const previewImagenPrincipal = ref(props.producto.imagen_principal ? props.producto.imagen_principal_url : null);
-const previewImagenes = ref(props.producto.imagenes ? props.producto.imagenes_url : []);
-const previewVideo = ref(props.producto.video ? props.producto.video_url : null);
+const previewImagenPrincipal = ref(props.producto.imagen_principal ? `/storage/${props.producto.imagen_principal}` : null);
+const previewImagenes = ref(Array.isArray(props.producto.imagenes) ? props.producto.imagenes.map(img => `/storage/${img}`) : []);
+const previewVideo = ref(props.producto.video ? `/storage/${props.producto.video}` : null);
 </script>
 
 <template>

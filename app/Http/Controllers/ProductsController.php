@@ -19,8 +19,6 @@ class ProductsController extends Controller
      */
     public function index(Request $request)
     {
-
-
         $query = Categories::with(['subcategories' => function ($query) {
             $query->orderBy('orden');
         }, 'subcategories.products' => function ($query) use ($request) {
@@ -83,32 +81,29 @@ class ProductsController extends Controller
      */
     public function store(ProductRequest $request)
     {
-        // Obtener el subcategory_id de la solicitud
         $subcategoryId = $request->input('subcategory_id');
-        // Encontrar la subcategoría correspondiente
         $subcategory = Subcategory::find($subcategoryId);
-        // Obtener el category_id de la subcategoría
         $category_id = $subcategory->categories_id;
 
-        // dd($request);
         $producto = Products::create($request->validated());
         $producto->category_id = $category_id;
-        // dd("store", $producto->category_id);
+
         if ($request->hasFile('imagen_principal')) {
-            $producto->imagen_principal = Storage::putFile('photos', $request->file('imagen_principal'));
+            $producto->imagen_principal = $request->file('imagen_principal')->store('photos', 'public');
         }
 
         if ($request->hasFile('video')) {
-            $producto->video = Storage::putFile('videos', $request->file('video'));
+            $producto->video = $request->file('video')->store('videos', 'public');
         }
 
         if ($request->hasFile('imagenes')) {
             $imagenes = [];
             foreach ($request->file('imagenes') as $photo) {
-                $imagenes[] = Storage::putFile('photos', $photo);
+                $imagenes[] = $photo->store('photos', 'public');
             }
             $producto->imagenes = json_encode($imagenes);
         }
+
         $user = Auth::user();
         $fullname = $user->apellido . " " . $user->name;
         $producto->save();
@@ -128,7 +123,7 @@ class ProductsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request,  $productoID)
+    public function edit(Request $request, $productoID)
     {
         $producto = Products::find($productoID);
         $subcategories = Subcategory::with('categories')->get();
@@ -139,45 +134,51 @@ class ProductsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProductRequest $request,  $productoID)
+    public function update(ProductRequest $request, $productoID)
     {
-        // dd("update");
-        // dd($request);
         $products = Products::find($productoID);
-        // dd($products);
         $oldData = $products->toArray();
         $user = Auth::user();
         $fullname = $user->apellido . " " . $user->name;
 
+        // Obtener el category_id correspondiente al subcategory_id
+        $subcategoryId = $request->input('subcategory_id');
+        $subcategory = Subcategory::find($subcategoryId);
+        $category_id = $subcategory->categories_id;
+
+        // Actualizar el category_id en el modelo
+        $request->merge(['category_id' => $category_id]);
+
 
         if ($request->hasFile('imagen_principal')) {
             if ($products->imagen_principal) {
-                Storage::delete($products->imagen_principal);
+                Storage::disk('public')->delete($products->imagen_principal);
             }
-            $products->imagen_principal = Storage::putFile('photos', $request->file('imagen_principal'));
+            $products->imagen_principal = $request->file('imagen_principal')->store('photos', 'public');
         }
 
         if ($request->hasFile('video')) {
             if ($products->video) {
-                Storage::delete($products->video);
+                Storage::disk('public')->delete($products->video);
             }
-            $products->video = Storage::putFile('videos', $request->file('video'));
+            $products->video = $request->file('video')->store('videos', 'public');
         }
 
         if ($request->hasFile('imagenes')) {
             $imagenes = [];
             foreach ($request->file('imagenes') as $photo) {
-                $imagenes[] = Storage::putFile('photos', $photo);
+                $imagenes[] = $photo->store('photos', 'public');
             }
             $products->imagenes = json_encode($imagenes);
         }
 
+        
+        $products->fill($request->except(['imagen_principal', 'video', 'imagenes']));
+        $products->save();
 
-        $products->update($request->validated());
         $this->createHistory($fullname, $user->cargo, 'producto', 'actualizar', ['old' => $oldData, 'new' => $products->toArray()]);
         return redirect()->route('products.index');
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -217,15 +218,6 @@ class ProductsController extends Controller
         $this->checkHistoryLimit();
     }
 
-    // public function incrementarVentas($id)
-    // {
-    //     $producto = Products::findOrFail($id);
-    //     $producto->increment('contador_ventas'); // Incrementar el contador de ventas
-    //     $producto->save();
-
-    //     return redirect()->back()->with('success', 'Venta registrada exitosamente.');
-    // }
-
     private function checkHistoryLimit()
     {
         $historyCount = History::count();
@@ -235,21 +227,38 @@ class ProductsController extends Controller
         }
     }
 
-    public function deleteImagenPrincipal(Products $producto)
+    public function deleteImagenPrincipal($productoID)
     {
-        $producto->deleteImagenPrincipal();
+        $producto = Products::find($productoID);
+        if ($producto->imagen_principal) {
+            Storage::delete($producto->imagen_principal);
+            $producto->imagen_principal = null;
+            $producto->save();
+        }
         return redirect()->route('products.edit', $producto->id);
     }
 
-    public function deleteVideo(Products $producto)
+    public function deleteVideo($productoID)
     {
-        $producto->deleteVideo();
+        $producto = Products::find($productoID);
+        if ($producto->video) {
+            Storage::delete($producto->video);
+            $producto->video = null;
+            $producto->save();
+        }
         return redirect()->route('products.edit', $producto->id);
     }
 
-    public function deleteImagenes(Products $producto, $index)
+    public function deleteImagenes($productoID, $index)
     {
-        $producto->deleteImagenes($index);
+        $producto = Products::find($productoID);
+        $imagenes = $producto->imagenes;
+        if (isset($imagenes[$index])) {
+            Storage::delete($imagenes[$index]);
+            unset($imagenes[$index]);
+            $producto->imagenes = array_values($imagenes);
+            $producto->save();
+        }
         return redirect()->route('products.edit', $producto->id);
     }
 }

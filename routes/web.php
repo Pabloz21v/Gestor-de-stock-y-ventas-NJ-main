@@ -41,7 +41,7 @@ Route::middleware([
 
     // Route::delete('products/{producto}/imagen_principal', [ProductsController::class, 'deleteMainPhoto'])->name('products.deleteMainPhoto');
 
-    Route::delete('products/{producto}/imagen-principal', [ProductsController::class, 'deleteMainPhoto'])->name('products.deleteMainPhoto');
-    Route::delete('products/{producto}/video', [ProductsController::class, 'deleteVideo'])->name('products.deleteVideo');
-    Route::delete('products/{producto}/imagenes/{index}', [ProductsController::class, 'deleteExtraPhoto'])->name('products.deleteExtraPhoto');
+    // Route::delete('products/{producto}/imagen-principal', [ProductsController::class, 'deleteMainPhoto'])->name('products.deleteMainPhoto');
+    // Route::delete('products/{producto}/video', [ProductsController::class, 'deleteVideo'])->name('products.deleteVideo');
+    // Route::delete('products/{producto}/imagenes/{index}', [ProductsController::class, 'deleteExtraPhoto'])->name('products.deleteExtraPhoto');
 });

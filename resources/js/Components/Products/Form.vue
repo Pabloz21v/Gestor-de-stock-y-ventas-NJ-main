@@ -45,10 +45,17 @@ const props = defineProps({
 	},
 });
 
-defineEmits(["submit"]);
-const previewImagenPrincipal = ref(null);
+const previewImagenPrincipal = ref('/storage/photos/default-avatar.jpg');
 const previewImagenes = ref([]);
 const previewVideo = ref(null);
+
+if (props.form.category_id != null) {
+	previewImagenPrincipal.value = '/storage/' + props.form.imagen_principal;
+	if (props.form.video != null)
+		previewVideo.value = '/storage/' + props.form.video;
+}
+
+defineEmits(["submit"]);
 
 const handleImagenPrincipal = (event) => {
 	const file = event.target.files[0];
@@ -90,6 +97,11 @@ const deleteImagenes = (index) => {
 			{{ updating ? form.id : "" }}
 		</template>
 		<template #form>
+			<img :src="'/storage/' + props.form.imagen_principal" alt="" srcset="">
+			<img src="../../../../storage/app/public/photos/7493Rq1hgGphZYnT9FTDmD86Vwoqq6MHPO5rzW7i.jpg" alt=""
+				srcset="">
+			{{ props.form.imagen_principal }}
+
 			<div class="col-span-6 sm:col-span-6">
 				<InputLabel for="visible" value="Visible" />
 				<input id="visible" type="checkbox" v-model="props.form.visible" :true-value="1" :false-value="0" />
@@ -179,7 +191,7 @@ const deleteImagenes = (index) => {
 
 				<InputLabel for="imagen_principal" value="Imagen Principal" class="mt-2 block w-full" />
 				<div v-if="props.form.imagen_principal || previewImagenPrincipal">
-					<img :src="previewImagenPrincipal || props.form.imagen_principal" alt="Main" />
+					<img :src="previewImagenPrincipal || `/storage/${props.form.imagen_principal}`" alt="Main" />
 					<button type="button" @click="deleteImagenPrincipal">Eliminar Foto Principal</button>
 				</div>
 				<input type="file" id="imagen_principal" @change="handleImagenPrincipal" />
@@ -187,7 +199,7 @@ const deleteImagenes = (index) => {
 
 				<InputLabel for="imagenes" value="Imagenes" class="mt-2 block w-full" />
 				<div v-for="(photo, index) in previewImagenes" :key="index">
-					<img :src="photo" alt="Extras" />
+					<img :src="photo || `/storage/${props.form.imagenes[index]}`" alt="Extras" />
 					<button type="button" @click="deleteImagenes(index)">Eliminar Foto</button>
 				</div>
 				<input type="file" multiple @change="handleImagenes" />
@@ -195,13 +207,11 @@ const deleteImagenes = (index) => {
 
 				<InputLabel for="video" value="Video" class="mt-2 block w-full" />
 				<div v-if="previewVideo || props.form.video">
-					<video :src="previewVideo || props.form.video" controls></video>
+					<video :src="previewVideo || `/storage/${props.form.video}`" controls></video>
 					<button type="button" @click="deleteVideo">Eliminar Video</button>
 				</div>
 				<input type="file" @change="handleVideo" />
 				<InputError :message="$page.props.errors.video" class="mt-0" />
-
-
 
 				<InputLabel for="proveedores" value="Proveedores" class="mt-2 block w-full" />
 				<TextInput id="proveedores" v-model="props.form.proveedores" type="text" class="mt-1 block w-full" />
