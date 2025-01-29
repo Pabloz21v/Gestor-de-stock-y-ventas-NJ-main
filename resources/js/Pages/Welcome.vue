@@ -84,7 +84,7 @@ function handleImageError() {
 </div> -->
                 <header></header>
 
-                <!-- MENU CARTA RESTAURANTE -->
+                <!-- MENU CARTA RESTAURANTE SIN LOGIN -->
                 <main class="">
                     <div class="max-w-3xl mx-auto">
                         <!-- Imagen superior -->

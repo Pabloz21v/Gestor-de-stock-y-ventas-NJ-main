@@ -6,6 +6,7 @@ use App\Models\Categories;
 use App\Models\Subcategory;
 use App\Models\User;
 use App\Models\Products;
+use App\Models\Sales;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -29,6 +30,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             SubcategorySeeder::class,
             ProductsSeeder::class,
+            SalesSeeder::class,
         ]);
     }
 }

@@ -16,7 +16,7 @@ const props = defineProps({
     <AppLayout title="Has logueado">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Vista del Menú
+                Vista del Menú 
             </h2>
         </template>
 

@@ -4,8 +4,8 @@ import { Link } from '@inertiajs/vue3';
 
 <template>
     <Link :href="'/'">
-        <img src="../../../storage/app/public/images/2024-05 logo tetris-08.png" alt="logo empresa" class="max-w-40 sm:max-w-36">
-        <!-- <svg
+    <img src="../../../storage/app/public/images/viralstore.jpg" alt="logo empresa" class="max-w-40 sm:max-w-36">
+    <!-- <svg
             class="w-16 h-16"
             viewBox="0 0 48 48"
             fill="none"

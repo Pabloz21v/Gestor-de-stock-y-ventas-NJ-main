@@ -165,7 +165,9 @@ const deleteProducts = id => {
                                     <input type="text" v-model="filters.search" placeholder="Buscar producto" class="border rounded px-2 py-1 w-full md:w-auto">
                                     <button type="button" @click="clearFilters" class="bg-gray-500 text-white px-4 py-2 rounded">Limpiar filtros</button>
                             </form>
-                            <Link :href="route('products.create')" class="bg-cyan-500 text-white rounded-lg px-4 py-2 mt-4 md:mt-2  lg:mt-0">
+                            <Link v-if="$page.props.user.permissions.includes(
+                                        'create roles'
+                                    )" :href="route('products.create')" class="bg-cyan-500 text-white rounded-lg px-4 py-2 mt-4 md:mt-2  lg:mt-0">
                                 Crear Productos
                             </Link>
                     </div>
@@ -220,13 +222,20 @@ const deleteProducts = id => {
                                                         />
                                                 </div>
                                             </p>  
+                                            
                                         </td>
+
+                                        
                                         <td class=" border  ">
-                                            <div class="  px-2 md:py-6  flex flex-col md:flex-row justify-around  items-center md:gap-2 gap-3">
-                                                <Link :href="route('products.edit', producto.id)">
+                                            <div class="px-2 md:py-6  flex flex-col md:flex-row justify-around  items-center md:gap-2 gap-3">
+                                                <Link v-if="$page.props.user.permissions.includes(
+                                        'create roles'
+                                    )" :href="route('products.edit', producto.id)">
                                                     <img src="../../../../storage/app/public/iconos/editar.png" class="max-w-9 mx-auto " alt="editar" srcset="">
                                                 </Link>
-                                                <button @click="openModalDelete(producto.id)">
+                                                <button v-if="$page.props.user.permissions.includes(
+                                        'create roles'
+                                    )" @click="openModalDelete(producto.id)">
                                                     <img src="../../../../storage/app/public/iconos/basura.svg" class="max-w-9 mx-auto " alt="eliminar" srcset="">
                                                 </button>
                                             </div>
