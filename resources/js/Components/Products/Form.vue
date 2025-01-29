@@ -53,8 +53,8 @@ if (props.form.category_id != null) {
 	previewImagenPrincipal.value = '/storage/' + props.form.imagen_principal;
 	if (props.form.video != null)
 		previewVideo.value = '/storage/' + props.form.video;
-	if (props.form.imagenes) {
-		previewImagenes.value = JSON.parse(props.form.imagenes).map(img => `/storage/${img}`);
+	if (props.form.imagenes && typeof props.form.imagenes === 'string') {
+		previewImagenes.value = JSON.parse(props.form.imagenes || '[]').map(img => `/storage/${img}`);
 	}
 }
 

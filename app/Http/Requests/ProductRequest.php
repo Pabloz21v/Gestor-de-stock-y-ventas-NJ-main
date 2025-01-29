@@ -23,8 +23,7 @@ class ProductRequest extends FormRequest
      */
     public function rules(): array
     {
-
-        return [
+        $rules = [
             'category_id' => 'nullable',
             'subcategory_id' => 'nullable|exists:subcategories,id',
             'visible' => 'boolean',
@@ -45,11 +44,22 @@ class ProductRequest extends FormRequest
             'stock_real' => 'integer|min:0',
             'stock_minimo' => 'integer',
             'stock_maximo' => 'integer',
-            'imagen_principal' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'imagenes.*' =>  'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'video' => 'nullable|mimes:mp4|max:20480',
             'proveedores' => 'nullable',
         ];
+
+        if ($this->isMethod('post') || $this->hasFile('imagen_principal')) {
+            $rules['imagen_principal'] = 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048';
+        }
+
+        if ($this->isMethod('post') || $this->hasFile('video')) {
+            $rules['video'] = 'nullable|mimes:mp4|max:20480';
+        }
+
+        if ($this->isMethod('post') || $this->hasFile('imagenes')) {
+            $rules['imagenes.*'] = 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048';
+        }
+
+        return $rules;
     }
 
     /**

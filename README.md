@@ -1,10 +1,9 @@
 ## Requisitos pendientes
 VISTA - PRODUCTOS
-agregar boton "ver" en la columna de acciones de index/products
-solo los de rol "admin" puden modificar la columna "visible"
 en index / sale agregar un filtro por precio, los rangos seran de 1) 0 a 99999,99 ; 2) 100000 a 249999,99 y 3) mayor a 250000
 Y otro para que organice de mayor a menor o viceverza
 ranking de unidades vendidas en la tabla productos
+en form el input proveedores debe permitir agregar mas de una url
 
 
 VISTA - VENTAS/SALES
