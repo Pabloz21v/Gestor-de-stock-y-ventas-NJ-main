@@ -1,7 +1,7 @@
 <script>
-    export default {
+export default {
     name: 'ProductsIndex'
-    }
+}
 </script>
 
 <script setup>
@@ -16,22 +16,22 @@ const props = defineProps({
     products: {
         type: Object,
         required: false
-        
+
     },
     subcategories: {
         type: Object,
         required: false
-        
+
     },
     categories: {
         type: Object,
         required: false
-        
+
     },
     filters: {
         type: Object,
         required: false
-        
+
     },
 })
 
@@ -40,19 +40,49 @@ const props = defineProps({
 const products = computed(() => props.products);
 const categories = computed(() => props.categories);
 const subcategories = computed(() => props.subcategories);
-const showModal = ref(false);
+const showModalDelete = ref(false);
+const showModalView = ref(false);
 const modalDataID = ref({});
-const isLoading = ref(false);
+const modalProductData = ref(null);
 
 const openModalDelete = (id) => {
     modalDataID.value = id;
-    showModal.value = true;
+    showModalDelete.value = true;
+};
+
+const openModalView = (product) => {
+    modalProductData.value = product;
+    showModalView.value = true;
 };
 
 const closeModal = () => {
-    showModal.value = false;
+    showModalDelete.value = false;
+    showModalView.value = false;
     modalDataID.value = {};
+    modalProductData.value = null;
 };
+
+const handleKeydown = (event) => {
+    if (event.key === 'Escape') {
+        closeModal();
+    }
+};
+
+watch(showModalDelete, (newVal) => {
+    if (newVal) {
+        window.addEventListener('keydown', handleKeydown);
+    } else {
+        window.removeEventListener('keydown', handleKeydown);
+    }
+});
+
+watch(showModalView, (newVal) => {
+    if (newVal) {
+        window.addEventListener('keydown', handleKeydown);
+    } else {
+        window.removeEventListener('keydown', handleKeydown);
+    }
+});
 
 const filters = ref({
     category_id: props.filters.categories_id || '',
@@ -96,7 +126,7 @@ const filteredCategories = computed(() => {
 });
 
 watch(filters, () => {
-    applyFilters();   
+    applyFilters();
 });
 
 
@@ -118,7 +148,7 @@ const filteredProducts = computed(() => {
 
 const visibleProducts = (products) => {
     isLoading.value = true;
-	Inertia.put(`/products/${products.id}`, products,{
+    Inertia.put(`/products/${products.id}`, products, {
         onSuccess: () => {
             isLoading.value = false;
         },
@@ -130,7 +160,7 @@ const visibleProducts = (products) => {
 
 const deleteProducts = id => {
     isLoading.value = true;
-    Inertia.delete(route('products.destroy', id),{
+    Inertia.delete(route('products.destroy', id), {
         onSuccess: () => {
             isLoading.value = false;
             isModalVisible.value = false;
@@ -147,29 +177,39 @@ const deleteProducts = id => {
         <template #header>
             <h1 class="font-semibold text-xl text-gray-800 leading-tight">Productos</h1>
         </template>
-        <div class="py-12 " >
+        <div class="py-12 ">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div class="flex flex-col lg:flex-row justify-between items-center mb-4">
-                            <span class="text-lg font-semibold">Productos</span>
-                            <form @submit.prevent="applyFilters" class="w-full md:w-auto flex flex-col md:flex-row items-start md:items-center gap-2 mt-4 md:mt-0">
-                                    <select v-model="filters.category_id" @change="applyFilters" class="border rounded px-3 pr-8 py-1 w-full md:w-auto">
-                                        <option value="">Categoria</option>
-                                        <option v-for="category in filteredCategories" :key="category.id" :value="category.id">{{ category.name }}</option>
-                                    </select>
-                                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Buscar</button>
-                                    <select v-model="filters.subcategory_id" class="border rounded px-3 pr-8 py-1 w-full md:w-auto">
-                                        <option value="">Subcategoria</option>
-                                        <option v-for="subcategory in filteredSubcategories" :key="subcategory.id" :value="subcategory.id">{{ subcategory.name }}</option>
-                                    </select>
-                                    <input type="text" v-model="filters.search" placeholder="Buscar producto" class="border rounded px-2 py-1 w-full md:w-auto">
-                                    <button type="button" @click="clearFilters" class="bg-gray-500 text-white px-4 py-2 rounded">Limpiar filtros</button>
-                            </form>
-                            <Link v-if="$page.props.user.permissions.includes(
-                                        'create roles'
-                                    )" :href="route('products.create')" class="bg-cyan-500 text-white rounded-lg px-4 py-2 mt-4 md:mt-2  lg:mt-0">
-                                Crear Productos
-                            </Link>
+                        <span class="text-lg font-semibold">Productos</span>
+                        <form @submit.prevent="applyFilters"
+                            class="w-full md:w-auto flex flex-col md:flex-row items-start md:items-center gap-2 mt-4 md:mt-0">
+                            <select v-model="filters.category_id" @change="applyFilters"
+                                class="border rounded px-3 pr-8 py-1 w-full md:w-auto">
+                                <option value="">Categoria</option>
+                                <option v-for="category in filteredCategories" :key="category.id" :value="category.id">
+                                    {{
+                                        category.name }}</option>
+                            </select>
+                            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Buscar</button>
+                            <select v-model="filters.subcategory_id"
+                                class="border rounded px-3 pr-8 py-1 w-full md:w-auto">
+                                <option value="">Subcategoria</option>
+                                <option v-for="subcategory in filteredSubcategories" :key="subcategory.id"
+                                    :value="subcategory.id">{{ subcategory.name }}</option>
+                            </select>
+                            <input type="text" v-model="filters.search" placeholder="Buscar producto"
+                                class="border rounded px-2 py-1 w-full md:w-auto">
+                            <button type="button" @click="clearFilters"
+                                class="bg-gray-500 text-white px-4 py-2 rounded">Limpiar
+                                filtros</button>
+                        </form>
+                        <Link v-if="$page.props.user.permissions.includes(
+                            'create roles'
+                        )" :href="route('products.create')"
+                            class="bg-cyan-500 text-white rounded-lg px-4 py-2 mt-4 md:mt-2  lg:mt-0">
+                        Crear Productos
+                        </Link>
                     </div>
                 </div>
                 <div class="mt-4">
@@ -182,7 +222,8 @@ const deleteProducts = id => {
                                         <th class="w-1/6 px-4 py-2 hidden sm:table-cell">Subcategoria</th>
                                         <th class="w-1/6 px-4 py-2 hidden sm:table-cell">Categoria</th>
                                         <th class="w-1/6 px-4 py-2 hidden sm:table-cell">Marca</th>
-                                        <th v-if="$page.props.user.permissions.includes('create roles')" class="w-1/6 px-4 py-2 hidden sm:table-cell">Visible</th>
+                                        <th v-if="$page.props.user.permissions.includes('create roles')"
+                                            class="w-1/6 px-4 py-2 hidden sm:table-cell">Visible</th>
                                         <th class="w-1/6 px-4 py-2">Acciones</th>
                                     </tr>
                                 </thead>
@@ -190,53 +231,63 @@ const deleteProducts = id => {
                                     <tr v-for="producto in filteredProducts" :key="producto.id">
                                         <td class="border  ">
                                             <p class="text-sm font-semibold leading-6 text-gray-900">
-                                                <div class="bg-white p-4  divide-y divide-dashed">
-                                                    <div class="flex justify-between">
-                                                        <div class="font-bold text-gray-700">{{producto.data.name}}</div>
-                                                        <div class="text-gray-700">${{producto.data.price}}</div>
-                                                    </div>
-                                                    <div class="text-gray-600">{{producto.data.description}}</div>
+                                            <div class="bg-white p-4  divide-y divide-dashed">
+                                                <div class="flex justify-between">
+                                                    <div class="font-bold text-gray-700">{{ producto.data.name }}</div>
+                                                    <div class="text-gray-700">${{ producto.data.price }}</div>
                                                 </div>
+                                                <div class="text-gray-600">{{ producto.data.description }}</div>
+                                            </div>
                                             </p>
                                         </td>
                                         <td class="border px-4  hidden sm:table-cell">
-                                            <p class="mt-1 truncate text-xs leading-5 text-gray-500">{{producto.subcategory}}</p>
-                                                    
+                                            <p class="mt-1 truncate text-xs leading-5 text-gray-500">
+                                                {{ producto.subcategory }}
+                                            </p>
+
                                         </td>
                                         <td class="border px-4  hidden sm:table-cell">
-                                            <p class="mt-1 truncate text-xs leading-5 text-gray-500">{{producto.category}}</p>
-                                                    
+                                            <p class="mt-1 truncate text-xs leading-5 text-gray-500">
+                                                {{ producto.category }}</p>
+
                                         </td>
                                         <td class="border px-4 hidden sm:table-cell">
-                                            <p class="mt-1 truncate text-xs leading-5 text-gray-500">{{ producto.data.marca }}</p>
+                                            <p class="mt-1 truncate text-xs leading-5 text-gray-500">{{
+                                                producto.data.marca }}
+                                            </p>
                                         </td>
-                                        <td v-if="$page.props.user.permissions.includes('create roles')" class="border px-4  hidden sm:table-cell">
+                                        <td v-if="$page.props.user.permissions.includes('create roles')"
+                                            class="border px-4  hidden sm:table-cell">
                                             <p class="text-sm font-semibold leading-6 text-gray-900">
-                                                <div>
-                                                    <input type="checkbox" 
-                                                        :checked="producto.data.visible"
-                                                        @change="visibleProducts(producto.data)"
-                                                        v-model="producto.data.visible" 
-                                                        :true-value="1"
-                                                        :false-value="0" 
-                                                        />
-                                                </div>
-                                            </p>  
-                                            
+                                            <div>
+                                                <input type="checkbox" :checked="producto.data.visible"
+                                                    @change="visibleProducts(producto.data)"
+                                                    v-model="producto.data.visible" :true-value="1" :false-value="0" />
+                                            </div>
+                                            </p>
+
                                         </td>
 
-                                        
+
                                         <td class=" border  ">
-                                            <div class="px-2 md:py-6  flex flex-col md:flex-row justify-around  items-center md:gap-2 gap-3">
+                                            <div
+                                                class="px-2 md:py-6  flex flex-col md:flex-row justify-around  items-center md:gap-2 gap-3">
                                                 <Link v-if="$page.props.user.permissions.includes(
-                                        'create roles'
-                                    )" :href="route('products.edit', producto.id)">
-                                                    <img src="../../../../storage/app/public/iconos/editar.png" class="max-w-9 mx-auto " alt="editar" srcset="">
+                                                    'create roles'
+                                                )" :href="route('products.edit', producto.id)">
+                                                <img src="../../../../storage/app/public/iconos/editar.png"
+                                                    class="max-w-9 mx-auto " alt="editar" srcset="">
                                                 </Link>
                                                 <button v-if="$page.props.user.permissions.includes(
-                                        'create roles'
-                                    )" @click="openModalDelete(producto.id)">
-                                                    <img src="../../../../storage/app/public/iconos/basura.svg" class="max-w-9 mx-auto " alt="eliminar" srcset="">
+                                                    'create roles'
+                                                )" @click="openModalDelete(producto.id)">
+                                                    <img src="../../../../storage/app/public/iconos/basura.svg"
+                                                        class="max-w-9 mx-auto " alt="eliminar" srcset="">
+                                                </button>
+
+                                                <button @click="openModalView(producto)">
+                                                    <img src="../../../../storage/app/public/iconos/ver.png"
+                                                        class="max-w-9 mx-auto " alt="ver" srcset="">
                                                 </button>
                                             </div>
                                         </td>
@@ -247,40 +298,123 @@ const deleteProducts = id => {
                     </div>
                 </div>
 
-            </div>   
+            </div>
         </div>
 
         <!-- Spinner -->
         <Spinner v-if="isLoading" />
 
         <!-- Modal delete-->
-        <div v-if="showModal" class="fixed z-10 inset-0 overflow-y-auto">
+        <div v-if="showModalDelete" class="fixed z-10 inset-0 overflow-y-auto">
             <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                 <div class="fixed inset-0 transition-opacity" aria-hidden="true">
                     <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
                 </div>
-                    <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-                    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                            <div class="sm:flex sm:items-start">
-                                <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                                    <h3 class="text-lg leading-6 font-medium text-gray-900">Eliminar Producto</h3>
-                                    <div class="mt-2">
-                                        <p class="text-sm text-gray-500">
-                                            Se eliminará el producto seleccionado
-                                        </p>
-                                        
-                                    </div>
+                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                <div
+                    class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                        <div class="sm:flex sm:items-start">
+                            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900">Eliminar Producto</h3>
+                                <div class="mt-2">
+                                    <p class="text-sm text-gray-500">
+                                        Se eliminará el producto seleccionado
+                                    </p>
+
                                 </div>
                             </div>
                         </div>
-                        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                            <button @click="closeModal" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 my-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">Cancelar</button>
-                        
-                            <button @click="deleteProducts(modalDataID)" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 my-2 py-2 bg-red-600 shadow-lg shadow-red-600 hover:bg-red-700 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">Eliminar</button>
-                        </div>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                        <button @click="closeModal" type="button"
+                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 my-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">Cancelar</button>
+
+                        <button @click="deleteProducts(modalDataID)" type="button"
+                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 my-2 py-2 bg-red-600 shadow-lg shadow-red-600 hover:bg-red-700 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">Eliminar</button>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Modal view product-->
+        <div v-if="showModalView" class="fixed z-10 inset-0 overflow-y-auto">
+            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                    <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+                </div>
+                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                <div
+                    class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                        <div class="sm:flex sm:items-start">
+                            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900">Detalles del Producto</h3>
+                                <div class="mt-2">
+                                    <p class="text-sm text-gray-500"><strong>Nombre:</strong> {{
+                                        modalProductData?.data?.name }}</p>
+                                    <p class="text-sm text-gray-500"><strong>Descripción:</strong> {{
+                                        modalProductData?.data?.description }}</p>
+                                    <p class="text-sm text-gray-500"><strong>Precio:</strong> ${{
+                                        modalProductData?.data?.price
+                                        }}</p>
+                                    <p class="text-sm text-gray-500"><strong>Ganancia:</strong> ${{
+                                        modalProductData?.data?.ganancia }}</p>
+                                    <p class="text-sm text-gray-500"><strong>Descuento:</strong> ${{
+                                        modalProductData?.data?.descuento }}</p>
+                                    <p class="text-sm text-gray-500"><strong>Oferta:</strong> {{
+                                        modalProductData?.data?.oferta
+                                        ? 'Sí' : 'No' }}</p>
+                                    <p class="text-sm text-gray-500"><strong>Detalles:</strong> {{
+                                        modalProductData?.data?.detalles }}</p>
+                                    <p class="text-sm text-gray-500"><strong>Marca:</strong> {{
+                                        modalProductData?.data?.marca }}
+                                    </p>
+                                    <p class="text-sm text-gray-500"><strong>Tamaño:</strong> {{
+                                        modalProductData?.data?.tamaño
+                                        }}</p>
+                                    <p class="text-sm text-gray-500"><strong>Color:</strong> {{
+                                        modalProductData?.data?.color }}
+                                    </p>
+                                    <p class="text-sm text-gray-500"><strong>Peso:</strong> {{
+                                        modalProductData?.data?.peso }}
+                                    </p>
+                                    <p class="text-sm text-gray-500"><strong>Dimensiones:</strong> {{
+                                        modalProductData?.data?.dimensiones }}</p>
+                                    <p class="text-sm text-gray-500"><strong>Stock:</strong> {{
+                                        modalProductData?.data?.stock }}
+                                    </p>
+                                    <p class="text-sm text-gray-500"><strong>Contador de Ventas:</strong> {{
+                                        modalProductData?.data?.contador_ventas }}</p>
+                                    <p class="text-sm text-gray-500"><strong>Stock Real:</strong> {{
+                                        modalProductData?.data?.stock_real }}</p>
+                                    <p class="text-sm text-gray-500"><strong>Stock Mínimo:</strong> {{
+                                        modalProductData?.data?.stock_minimo }}</p>
+                                    <p class="text-sm text-gray-500"><strong>Stock Máximo:</strong> {{
+                                        modalProductData?.data?.stock_maximo }}</p>
+                                    <p class="text-sm text-gray-500"><strong>Visible:</strong> {{
+                                        modalProductData?.data?.visible ? 'Sí' : 'No' }}</p>
+                                    <p class="text-sm text-gray-500"><strong>Imagen Principal:</strong> <img
+                                            :src="`/storage/${modalProductData?.data?.imagen_principal}`"
+                                            alt="Imagen Principal" /></p>
+                                    <p class="text-sm text-gray-500"><strong>Imágenes:</strong></p>
+                                    <div v-for="(img, index) in JSON.parse(modalProductData?.data?.imagenes || '[]')" :key="index">
+                                        <img :src="`/storage/${img}`" alt="Imagen" />
+                                    </div>
+                                    <p class="text-sm text-gray-500"><strong>Video:</strong> <video
+                                            :src="`/storage/${modalProductData?.data?.video}`" controls></video></p>
+                                    <p class="text-sm text-gray-500"><strong>Proveedores:</strong> {{
+                                        modalProductData?.data?.proveedores }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                        <button @click="closeModal" type="button"
+                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 my-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">Cerrar</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </AppLayout>
 </template>

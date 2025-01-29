@@ -53,6 +53,9 @@ if (props.form.category_id != null) {
 	previewImagenPrincipal.value = '/storage/' + props.form.imagen_principal;
 	if (props.form.video != null)
 		previewVideo.value = '/storage/' + props.form.video;
+	if (props.form.imagenes) {
+		previewImagenes.value = JSON.parse(props.form.imagenes).map(img => `/storage/${img}`);
+	}
 }
 
 defineEmits(["submit"]);
@@ -199,7 +202,7 @@ const deleteImagenes = (index) => {
 
 				<InputLabel for="imagenes" value="Imagenes" class="mt-2 block w-full" />
 				<div v-for="(photo, index) in previewImagenes" :key="index">
-					<img :src="photo || `/storage/${props.form.imagenes[index]}`" alt="Extras" />
+					<img :src="photo" alt="Extras" />
 					<button type="button" @click="deleteImagenes(index)">Eliminar Foto</button>
 				</div>
 				<input type="file" multiple @change="handleImagenes" />
@@ -210,6 +213,7 @@ const deleteImagenes = (index) => {
 					<video :src="previewVideo || `/storage/${props.form.video}`" controls></video>
 					<button type="button" @click="deleteVideo">Eliminar Video</button>
 				</div>
+
 				<input type="file" @change="handleVideo" />
 				<InputError :message="$page.props.errors.video" class="mt-0" />
 

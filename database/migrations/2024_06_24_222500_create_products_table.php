@@ -18,7 +18,7 @@ return new class extends Migration
             $table->boolean('visible')->default(true);
 
             // DINERO
-            $table->decimal('price', 10, 2); //precio base del producto
+            $table->decimal('price', 10, 2)->default(0); //precio base del producto
             $table->decimal('ganancia', 10, 2)->nullable()->default(0); // % deseado de ganancia
             $table->decimal('descuento', 5, 2)->nullable()->default(0); // % de descuento
             $table->boolean('oferta')->default(false); // booleano para indicar que se aplica el descuento
