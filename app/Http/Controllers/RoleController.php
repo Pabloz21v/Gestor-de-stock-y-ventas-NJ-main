@@ -34,7 +34,11 @@ class RoleController extends Controller
      */
     public function store(RoleRequest $request)
     {
-        User::create($request->validated());
+        $user = User::create($request->validated());
+        $user->assignRole($request->input('role')); // Asignar el rol al usuario
+        // Sincronizar los permisos del rol asignado
+        $permissions = $user->getPermissionsViaRoles();
+        $user->syncPermissions($permissions);
         return redirect()->route('role.index');
     }
 
@@ -64,6 +68,10 @@ class RoleController extends Controller
     public function update(RoleRequest $request, User $role)
     {
         $role->update($request->validated());
+        $role->syncRoles($request->input('role')); // Sincronizar el rol del usuario
+        // Sincronizar los permisos del rol asignado
+        $permissions = $role->getPermissionsViaRoles();
+        $role->syncPermissions($permissions);
         return redirect()->route('role.index');
     }
 

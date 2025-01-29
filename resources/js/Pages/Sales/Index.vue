@@ -8,6 +8,7 @@ export default {
             isLoading: false,
             timeRange: '',
             vendedorFilter: '',
+            sortByReg: false,
         };
     },
     methods: {
@@ -60,12 +61,17 @@ export default {
             });
         },
         applyFilters() {
-            Inertia.get(route('sales.index'), { estado: this.estadoFilter, timeRange: this.timeRange, vendedor: this.vendedorFilter }, { preserveState: true });
+            Inertia.get(route('sales.index'), { estado: this.estadoFilter, timeRange: this.timeRange, vendedor: this.vendedorFilter, sortByReg: this.sortByReg }, { preserveState: true });
         },
         clearFilters() {
             this.estadoFilter = '';
             this.timeRange = '';
             this.vendedorFilter = '';
+            this.sortByReg = false;
+            this.applyFilters();
+        },
+        toggleSortByReg() {
+            this.sortByReg = !this.sortByReg;
             this.applyFilters();
         }
     },
@@ -107,15 +113,22 @@ const props = defineProps({
 const estadoFilter = ref(props.filters.estado || '');
 const timeRange = ref(props.filters.timeRange || '');
 const vendedorFilter = ref(props.filters.vendedor || '');
+const sortByReg = ref(props.filters.sortByReg || false);
 
 const applyFilters = () => {
-    Inertia.get(route('sales.index'), { estado: estadoFilter.value, timeRange: timeRange.value, vendedor: vendedorFilter.value }, { preserveState: true });
+    Inertia.get(route('sales.index'), { estado: estadoFilter.value, timeRange: timeRange.value, vendedor: vendedorFilter.value, sortByReg: sortByReg.value }, { preserveState: true });
 };
 
 const clearFilters = () => {
     estadoFilter.value = '';
     timeRange.value = '';
     vendedorFilter.value = '';
+    sortByReg.value = false;
+    applyFilters();
+};
+
+const toggleSortByReg = () => {
+    sortByReg.value = !sortByReg.value;
     applyFilters();
 };
 
@@ -153,10 +166,13 @@ const isEditor = computed(() => props.userPermissions.includes('update products'
                             <option value="afternoon">Tarde (12:00 - 18:00)</option>
                             <option value="evening">Noche (18:00 - 00:00)</option>
                         </select>
-                        <select v-model="vendedorFilter" @change="applyFilters" class="border rounded px-3 pr-8 py-1">
+                        <select v-if="$page.props.user.permissions.includes('create roles')" v-model="vendedorFilter" @change="applyFilters" class="border rounded px-3 pr-8 py-1">
                             <option value="">Vendedor</option>
                             <option v-for="user in props.users" :key="user.id" :value="user.id">{{ user.name }}</option>
                         </select>
+                        <button @click="toggleSortByReg" class="bg-blue-500 text-white rounded-lg px-4 py-2">
+                            Ordenar por Registro
+                        </button>
                         <button @click="clearFilters" class="bg-red-500 text-white rounded-lg px-4 py-2">
                             Limpiar Filtros
                         </button>
@@ -181,7 +197,6 @@ const isEditor = computed(() => props.userPermissions.includes('update products'
                                     <td class="border px-4 py-2">{{ sale.cliente }}</td>
                                     <td class="border px-4 py-2">{{ sale.user?.name || 'N/A' }}</td>
                                     <td class="border px-4 py-2">{{ sale.product?.name || 'N/A' }}</td>
-                                 
                                     <td :class="getEstadoClass(sale.estado)" class="border px-4 py-2">
                                         <template v-if="$page.props.user.permissions.includes('create roles')">
                                             <select v-model="sale.estado" @change="updateSaleEstado(sale)"
@@ -199,8 +214,6 @@ const isEditor = computed(() => props.userPermissions.includes('update products'
                                         </template>
                                     </td>
 
-                                    
-                                
                                     <td class="border px-4 py-2">
                                         <Link v-if="sale.estado === 'PENDIENTE'" :href="route('sales.edit', sale.id)" class="text-blue-500">Editar</Link>
                                         <button v-if="sale.estado === 'PENDIENTE'" @click="deleteSale(sale.id)" class="text-red-500 ml-2">Eliminar</button>

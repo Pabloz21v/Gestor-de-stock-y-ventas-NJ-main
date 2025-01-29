@@ -63,6 +63,13 @@ import { Link } from '@inertiajs/vue3'
                 </textarea>
                 <InputError :message="$page.props.errors.comentarios" class="mt-0" />
                 
+                <InputLabel for="role" value="Role" class="mt-2 block w-full"/>
+                <select id="role" v-model="form.role" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                    <option value="admin">Admin</option>
+                    <option value="editor">Editor</option>
+                    <option value="buyer">Buyer</option>
+                </select>
+                <InputError :message="$page.props.errors.role" class="mt-0" />
 
                 <InputLabel for="email" value="Email" class="mt-2 block w-full"/>
                 <TextInput id="email" v-model="form.email" type="email"  class="mt-1 block w-full"/>

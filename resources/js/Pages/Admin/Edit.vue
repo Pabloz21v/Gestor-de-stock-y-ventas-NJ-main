@@ -24,6 +24,7 @@
         domicilio: props.role.domicilio,
         comentarios: props.role.comentarios,
         cargo: props.role.cargo,
+        role: props.role.role,
     })
     
 </script>

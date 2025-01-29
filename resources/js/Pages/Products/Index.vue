@@ -182,7 +182,7 @@ const deleteProducts = id => {
                                         <th class="w-1/6 px-4 py-2 hidden sm:table-cell">Subcategoria</th>
                                         <th class="w-1/6 px-4 py-2 hidden sm:table-cell">Categoria</th>
                                         <th class="w-1/6 px-4 py-2 hidden sm:table-cell">Marca</th>
-                                        <th class="w-1/6 px-4 py-2 hidden sm:table-cell">Visible</th>
+                                        <th v-if="$page.props.user.permissions.includes('create roles')" class="w-1/6 px-4 py-2 hidden sm:table-cell">Visible</th>
                                         <th class="w-1/6 px-4 py-2">Acciones</th>
                                     </tr>
                                 </thead>
@@ -210,7 +210,7 @@ const deleteProducts = id => {
                                         <td class="border px-4 hidden sm:table-cell">
                                             <p class="mt-1 truncate text-xs leading-5 text-gray-500">{{ producto.data.marca }}</p>
                                         </td>
-                                        <td class="border px-4  hidden sm:table-cell">
+                                        <td v-if="$page.props.user.permissions.includes('create roles')" class="border px-4  hidden sm:table-cell">
                                             <p class="text-sm font-semibold leading-6 text-gray-900">
                                                 <div>
                                                     <input type="checkbox" 

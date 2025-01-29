@@ -42,11 +42,15 @@ class SalesController extends Controller
             $salesQuery->where('vendedor', $request->vendedor);
         }
 
+        if ($request->sortByReg) {
+            $salesQuery->orderBy('reg', 'asc');
+        }
+
         $sales = $salesQuery->get();
 
         return Inertia::render('Sales/Index', [
             'sales' => $sales,
-            'filters' => $request->only(['estado', 'timeRange', 'vendedor']),
+            'filters' => $request->only(['estado', 'timeRange', 'vendedor', 'sortByReg']),
             'users' => User::all()
         ]);
     }

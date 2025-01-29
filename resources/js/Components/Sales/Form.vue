@@ -56,6 +56,16 @@ watch([() => props.form.sub_total, () => props.form.entrada], ([newSubTotal, new
     props.form.pendiente = parseFloat((newSubTotal - newEntrada).toFixed(2));
 });
 
+watch([() => props.form.cliente, () => props.form.vendedor], ([newCliente, newVendedor]) => {
+    if (newCliente && newVendedor) {
+        const clienteParts = newCliente.split(' ').map(part => part.substring(0, 2).toUpperCase()).join('');
+        const vendedorId = newVendedor.toString();
+        const date = new Date();
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getFullYear().toString().substring(2, 4)}`;
+        props.form.reg = `${formattedDate}${clienteParts}${vendedorId}`;
+    }
+});
+
 if (isEditor.value) {
     props.form.vendedor = props.currentUser.id;
 }
@@ -72,7 +82,7 @@ if (isEditor.value) {
         <template #form>
             <div class="col-span-6 sm:col-span-6">
                 <InputLabel for="reg" value="Registro" />
-                <TextInput id="reg" v-model="form.reg" type="text" class="mt-1 block w-full" />
+                <TextInput id="reg" v-model="form.reg" type="text" class="mt-1 block w-full" disabled />
                 <InputError :message="$page.props.errors.reg" class="mt-0" />
 
                 <InputLabel for="cliente" value="Cliente" class="mt-2 block w-full" />
@@ -84,20 +94,25 @@ if (isEditor.value) {
                 <InputError :message="$page.props.errors.contacto" class="mt-0" />
 
                 <InputLabel for="vendedor" value="Vendedor" class="mt-2 block w-full" />
-                <select v-model="form.vendedor" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full" :disabled="isEditor">
+                <select v-model="form.vendedor"
+                    class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
+                    :disabled="isEditor">
                     <option v-for="user in users" :key="user.id" :value="user.id">{{ user.name }}</option>
                 </select>
                 <InputError :message="$page.props.errors.vendedor" class="mt-0" />
                 <TextInput v-if="isEditor" v-model="form.vendedor" type="hidden" :value="currentUser.id" />
 
                 <InputLabel for="producto" value="Producto" class="mt-2 block w-full" />
-                <select v-model="form.producto" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full">
-                    <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}</option>
+                <select v-model="form.producto"
+                    class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full">
+                    <option v-for="product in products" :key="product.id" :value="product.id">{{ product.name }}
+                    </option>
                 </select>
                 <InputError :message="$page.props.errors.producto" class="mt-0" />
 
                 <InputLabel for="precio" value="Precio" class="mt-2 block w-full" />
-                <TextInput id="precio" v-model="form.precio" type="number" step="0.01" class="mt-1 block w-full" disabled />
+                <TextInput id="precio" v-model="form.precio" type="number" step="0.01" class="mt-1 block w-full"
+                    disabled />
                 <InputError :message="$page.props.errors.precio" class="mt-0" />
 
                 <InputLabel for="unidades" value="Unidades" class="mt-2 block w-full" />
@@ -105,7 +120,8 @@ if (isEditor.value) {
                 <InputError :message="$page.props.errors.unidades" class="mt-0" />
 
                 <InputLabel for="sub_total" value="Sub Total" class="mt-2 block w-full" />
-                <TextInput id="sub_total" v-model="form.sub_total" type="number" step="0.01" class="mt-1 block w-full" disabled />
+                <TextInput id="sub_total" v-model="form.sub_total" type="number" step="0.01" class="mt-1 block w-full"
+                    disabled />
                 <InputError :message="$page.props.errors.sub_total" class="mt-0" />
 
                 <InputLabel for="entrada" value="Entrada" class="mt-2 block w-full" />
@@ -113,11 +129,14 @@ if (isEditor.value) {
                 <InputError :message="$page.props.errors.entrada" class="mt-0" />
 
                 <InputLabel for="pendiente" value="Pendiente" class="mt-2 block w-full" />
-                <TextInput id="pendiente" v-model="form.pendiente" type="number" step="0.01" class="mt-1 block w-full" disabled />
+                <TextInput id="pendiente" v-model="form.pendiente" type="number" step="0.01" class="mt-1 block w-full"
+                    disabled />
                 <InputError :message="$page.props.errors.pendiente" class="mt-0" />
 
                 <InputLabel for="estado" value="Estado" class="mt-2 block w-full" />
-                <select v-model="form.estado" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full" :disabled="!isAdmin && !isEditor">
+                <select v-model="form.estado"
+                    class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
+                    :disabled="!isAdmin && !isEditor">
                     <option value="ENTREGADO" v-if="isAdmin">ENTREGADO</option>
                     <option value="PENDIENTE">PENDIENTE</option>
                     <option value="CANCELADO" v-if="isAdmin">CANCELADO</option>
@@ -128,7 +147,8 @@ if (isEditor.value) {
                 <InputError :message="$page.props.errors.estado" class="mt-0" />
 
                 <InputLabel for="sobreprecio" value="Sobreprecio" class="mt-2 block w-full" />
-                <TextInput id="sobreprecio" v-model="form.sobreprecio" type="number" step="0.01" class="mt-1 block w-full" />
+                <TextInput id="sobreprecio" v-model="form.sobreprecio" type="number" step="0.01"
+                    class="mt-1 block w-full" />
                 <InputError :message="$page.props.errors.sobreprecio" class="mt-0" />
 
                 <InputLabel for="observacion" value="Observación" class="mt-2 block w-full" />
