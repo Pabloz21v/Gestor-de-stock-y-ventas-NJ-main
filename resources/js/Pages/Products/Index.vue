@@ -177,6 +177,7 @@ const deleteProducts = id => {
         <template #header>
             <h1 class="font-semibold text-xl text-gray-800 leading-tight">Productos</h1>
         </template>
+
         <div class="py-12 ">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="p-6 bg-white border-b border-gray-200">
@@ -272,6 +273,10 @@ const deleteProducts = id => {
                                         <td class=" border  ">
                                             <div
                                                 class="px-2 md:py-6  flex flex-col md:flex-row justify-around  items-center md:gap-2 gap-3">
+                                                <button @click="openModalView(producto)">
+                                                    <img src="../../../../storage/app/public/iconos/ver.png"
+                                                        class="max-w-9 mx-auto " alt="ver" srcset="">
+                                                </button>
                                                 <Link v-if="$page.props.user.permissions.includes(
                                                     'create roles'
                                                 )" :href="route('products.edit', producto.id)">
@@ -285,10 +290,7 @@ const deleteProducts = id => {
                                                         class="max-w-9 mx-auto " alt="eliminar" srcset="">
                                                 </button>
 
-                                                <button @click="openModalView(producto)">
-                                                    <img src="../../../../storage/app/public/iconos/ver.png"
-                                                        class="max-w-9 mx-auto " alt="ver" srcset="">
-                                                </button>
+                                                
                                             </div>
                                         </td>
                                     </tr>
@@ -355,16 +357,16 @@ const deleteProducts = id => {
                                         modalProductData?.data?.name }}</p>
                                     <p class="text-sm text-gray-500"><strong>Descripción:</strong> {{
                                         modalProductData?.data?.description }}</p>
-                                    <p class="text-sm text-gray-500"><strong>Precio:</strong> ${{
+                                    <p class="text-sm text-gray-500"><strong>Costo:</strong> {{
                                         modalProductData?.data?.price
                                         }}</p>
-                                    <p class="text-sm text-gray-500"><strong>Ganancia:</strong> ${{
-                                        modalProductData?.data?.ganancia }}</p>
-                                    <p class="text-sm text-gray-500"><strong>Descuento:</strong> ${{
+                                    <p class="text-sm text-gray-500"><strong>Mark Up (valor se lleva a %):</strong> {{
+                                        modalProductData?.data?.ganancia }}%</p>
+                                    <p class="text-sm text-gray-500"><strong>Descuento:</strong> {{
                                         modalProductData?.data?.descuento }}</p>
                                     <p class="text-sm text-gray-500"><strong>Oferta:</strong> {{
                                         modalProductData?.data?.oferta
-                                        ? 'Sí' : 'No' }}</p>
+                                            ? 'Sí' : 'No' }}</p>
                                     <p class="text-sm text-gray-500"><strong>Detalles:</strong> {{
                                         modalProductData?.data?.detalles }}</p>
                                     <p class="text-sm text-gray-500"><strong>Marca:</strong> {{
@@ -394,17 +396,24 @@ const deleteProducts = id => {
                                         modalProductData?.data?.stock_maximo }}</p>
                                     <p class="text-sm text-gray-500"><strong>Visible:</strong> {{
                                         modalProductData?.data?.visible ? 'Sí' : 'No' }}</p>
+                                    <p class="text-sm text-gray-500"><strong>Proveedores:</strong></p>
+                                    <ul class="list-disc list-inside pl-4">
+                                        <li v-for="(proveedor, index) in JSON.parse(modalProductData?.data?.proveedores || '[]')"
+                                            :key="index" class="mb-1">
+                                            <a :href="proveedor" target="_blank" class="text-blue-500 hover:underline">{{ proveedor }}</a>
+                                        </li>
+                                    </ul>
                                     <p class="text-sm text-gray-500"><strong>Imagen Principal:</strong> <img
                                             :src="`/storage/${modalProductData?.data?.imagen_principal}`"
                                             alt="Imagen Principal" /></p>
                                     <p class="text-sm text-gray-500"><strong>Imágenes:</strong></p>
-                                    <div v-for="(img, index) in JSON.parse(modalProductData?.data?.imagenes || '[]')" :key="index">
+                                    <div v-for="(img, index) in JSON.parse(modalProductData?.data?.imagenes || '[]')"
+                                        :key="index">
                                         <img :src="`/storage/${img}`" alt="Imagen" />
                                     </div>
                                     <p class="text-sm text-gray-500"><strong>Video:</strong> <video
                                             :src="`/storage/${modalProductData?.data?.video}`" controls></video></p>
-                                    <p class="text-sm text-gray-500"><strong>Proveedores:</strong> {{
-                                        modalProductData?.data?.proveedores }}</p>
+
                                 </div>
                             </div>
                         </div>

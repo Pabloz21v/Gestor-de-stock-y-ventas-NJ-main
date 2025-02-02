@@ -48,6 +48,7 @@ const props = defineProps({
 const previewImagenPrincipal = ref('/storage/photos/default-avatar.jpg');
 const previewImagenes = ref([]);
 const previewVideo = ref(null);
+const proveedoresList = ref(props.form.proveedores ? JSON.parse(props.form.proveedores) : []);
 
 if (props.form.category_id != null) {
 	previewImagenPrincipal.value = '/storage/' + props.form.imagen_principal;
@@ -87,6 +88,20 @@ const deleteVideo = () => {
 
 const deleteImagenes = (index) => {
 	router.delete(route('products.deleteImagenes', { products: props.form.id, index }));
+};
+
+const addProveedor = () => {
+	proveedoresList.value.push('');
+	updateProveedores();
+};
+
+const removeProveedor = (index) => {
+	proveedoresList.value.splice(index, 1);
+	updateProveedores();
+};
+
+const updateProveedores = () => {
+	props.form.proveedores = JSON.stringify(proveedoresList.value);
 };
 </script>
 
@@ -213,12 +228,16 @@ const deleteImagenes = (index) => {
 					<video :src="previewVideo || `/storage/${props.form.video}`" controls></video>
 					<button type="button" @click="deleteVideo">Eliminar Video</button>
 				</div>
-
 				<input type="file" @change="handleVideo" />
 				<InputError :message="$page.props.errors.video" class="mt-0" />
 
 				<InputLabel for="proveedores" value="Proveedores" class="mt-2 block w-full" />
-				<TextInput id="proveedores" v-model="props.form.proveedores" type="text" class="mt-1 block w-full" />
+				<div v-for="(proveedor, index) in proveedoresList" :key="index" class="flex items-center gap-2">
+					<TextInput v-model="proveedoresList[index]" type="text" class="mt-1 block w-full" @input="updateProveedores" />
+					<a :href="proveedoresList[index]" target="_blank" class="text-blue-500 hover:underline">Abrir</a>
+					<button type="button" @click="removeProveedor(index)">Eliminar</button>
+				</div>
+				<button type="button" @click="addProveedor">Agregar Proveedor</button>
 				<InputError :message="$page.props.errors.proveedores" class="mt-0" />
 			</div>
 		</template>
