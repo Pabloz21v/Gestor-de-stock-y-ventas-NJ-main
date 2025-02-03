@@ -172,7 +172,7 @@ class ProductsController extends Controller
             $products->imagenes = json_encode($imagenes);
         }
 
-        
+
         $products->fill($request->except(['imagen_principal', 'video', 'imagenes']));
         $products->save();
 
@@ -260,5 +260,14 @@ class ProductsController extends Controller
             $producto->save();
         }
         return redirect()->route('products.edit', $producto->id);
+    }
+
+    /**
+     * Display a listing of the products on offer.
+     */
+    public function ofertas()
+    {
+        $products = Products::where('oferta', true)->get();
+        return Inertia('Products/Ofertas', ['products' => $products]);
     }
 }

@@ -289,8 +289,6 @@ const deleteProducts = id => {
                                                     <img src="../../../../storage/app/public/iconos/basura.svg"
                                                         class="max-w-9 mx-auto " alt="eliminar" srcset="">
                                                 </button>
-
-                                                
                                             </div>
                                         </td>
                                     </tr>
@@ -359,7 +357,7 @@ const deleteProducts = id => {
                                         modalProductData?.data?.description }}</p>
                                     <p class="text-sm text-gray-500"><strong>Costo:</strong> {{
                                         modalProductData?.data?.price
-                                        }}</p>
+                                    }}</p>
                                     <p class="text-sm text-gray-500"><strong>Mark Up (valor se lleva a %):</strong> {{
                                         modalProductData?.data?.ganancia }}%</p>
                                     <p class="text-sm text-gray-500"><strong>Descuento:</strong> {{
@@ -374,7 +372,7 @@ const deleteProducts = id => {
                                     </p>
                                     <p class="text-sm text-gray-500"><strong>Tamaño:</strong> {{
                                         modalProductData?.data?.tamaño
-                                        }}</p>
+                                    }}</p>
                                     <p class="text-sm text-gray-500"><strong>Color:</strong> {{
                                         modalProductData?.data?.color }}
                                     </p>
@@ -400,7 +398,9 @@ const deleteProducts = id => {
                                     <ul class="list-disc list-inside pl-4">
                                         <li v-for="(proveedor, index) in JSON.parse(modalProductData?.data?.proveedores || '[]')"
                                             :key="index" class="mb-1">
-                                            <a :href="proveedor" target="_blank" class="text-blue-500 hover:underline">{{ proveedor }}</a>
+                                            <a :href="proveedor" target="_blank"
+                                                class="text-blue-500 hover:underline">{{
+                                                proveedor }}</a>
                                         </li>
                                     </ul>
                                     <p class="text-sm text-gray-500"><strong>Imagen Principal:</strong> <img

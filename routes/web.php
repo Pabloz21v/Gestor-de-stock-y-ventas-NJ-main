@@ -41,6 +41,7 @@ Route::middleware([
     Route::post('/backups/{id}/restore', [BackupsController::class, 'restore'])->name('backups.restore');
     Route::post('/backups/createBackup', [BackupsController::class, 'createBackup'])->name('backups.createBackup');
     Route::put('/sales/{sale}/estado', [SalesController::class, 'updateEstado'])->name('sales.updateEstado');
+    Route::get('/ofertas', [ProductsController::class, 'ofertas'])->name('ofertas');
 
     // Route::delete('products/{producto}/imagen_principal', [ProductsController::class, 'deleteMainPhoto'])->name('products.deleteMainPhoto');
 
