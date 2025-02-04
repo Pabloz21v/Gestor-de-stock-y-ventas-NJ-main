@@ -35,6 +35,14 @@ const props = defineProps({
     },
 })
 
+const totalStock = computed(() => {
+    return (
+        parseInt(modalProductData.value?.data?.stock_real || 0) +
+        parseInt(modalProductData.value?.data?.stock_en_viaje || 0) +
+        parseInt(modalProductData.value?.data?.stock_en_viaje_vendido || 0)
+    );
+});
+
 // const products = ref(props.products);
 // const {  inertia } = usePage();
 const products = computed(() => props.products);
@@ -388,6 +396,12 @@ const deleteProducts = id => {
                                         modalProductData?.data?.contador_ventas }}</p>
                                     <p class="text-sm text-gray-500"><strong>Stock Real:</strong> {{
                                         modalProductData?.data?.stock_real }}</p>
+                                    <p class="text-sm text-gray-500"><strong>Stock en Viaje:</strong> {{
+                                        modalProductData?.data?.stock_en_viaje }}</p>
+                                    <p class="text-sm text-gray-500"><strong>Stock en Viaje Vendido:</strong> {{
+                                        modalProductData?.data?.stock_en_viaje_vendido }}</p>
+                                    <p class="text-sm text-gray-500"><strong>Stock Total:</strong> {{
+                                        totalStock }}</p>
                                     <p class="text-sm text-gray-500"><strong>Stock Mínimo:</strong> {{
                                         modalProductData?.data?.stock_minimo }}</p>
                                     <p class="text-sm text-gray-500"><strong>Stock Máximo:</strong> {{

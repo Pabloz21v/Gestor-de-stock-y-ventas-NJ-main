@@ -3,7 +3,7 @@ VISTA - PRODUCTOS
 en index / sale agregar un filtro por precio, los rangos seran de 1) 0 a 99999,99 ; 2) 100000 a 249999,99 y 3) mayor a 250000
 Y otro para que organice de mayor a menor o viceverza
 ranking de unidades vendidas en la tabla productos
-en form el input proveedores debe permitir agregar mas de una url
+
 la formula de md mu, x=(1-costo/precio) x=(precio/costo-1), es para poder saber que prcentajes de descuento y margenes quedan por ocupar
 una casilla para agregar porcentaje de impuestos.
 
@@ -18,13 +18,14 @@ pueden usar su fondo para comprar productos usando la lista de precio de consign
 
 en pedido individual que pueda agregar como si fuera un paquete de compras/pedidos
 
-VISTA -PEdidos nuevos
-VISTA - excel
-VISTA - ofertas
+VISTA -Pedidos nuevos
 
+
+VISTA - excel
 VISTA - estadisticas
 VISta - remitos
 
+VISTA - ofertas
 ## Accesos
 
 

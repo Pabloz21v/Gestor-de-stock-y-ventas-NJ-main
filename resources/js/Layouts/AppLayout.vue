@@ -92,6 +92,11 @@ const logout = () => {
                                     Ofertas
                                 </NavLink>
                             </div>
+                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <NavLink :href="route('pedidos.index')" :active="route().current('pedidos.index')">
+                                    Pedidos
+                                </NavLink>
+                            </div>
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" v-if="
                                 $page.props.user.permissions.includes(
                                     'create roles'
@@ -340,6 +345,11 @@ const logout = () => {
                     <div class="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink :href="route('ofertas')" :active="route().current('ofertas')">
                             Ofertas
+                        </ResponsiveNavLink>
+                    </div>
+                    <div class="pt-2 pb-3 space-y-1">
+                        <ResponsiveNavLink :href="route('pedidos.index')" :active="route().current('pedidos.index')">
+                            Pedidos
                         </ResponsiveNavLink>
                     </div>
                     <div class="pt-2 pb-3 space-y-1" v-if="

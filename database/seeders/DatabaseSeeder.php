@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             SubcategorySeeder::class,
             ProductsSeeder::class,
             SalesSeeder::class,
+            PedidosTableSeeder::class
         ]);
     }
 }

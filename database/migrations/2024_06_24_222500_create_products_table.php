@@ -39,6 +39,8 @@ return new class extends Migration
             $table->integer('stock_real')->default(0);  //el que se tiene a disposicion
             $table->integer('stock_minimo')->default(0); //alertas de poco stock
             $table->integer('stock_maximo')->default(0); //alertas de sobreestock
+            $table->integer('stock_en_viaje')->default(0); // nuevo campo para stock en viaje
+            $table->integer('stock_en_viaje_vendido')->default(0); // nuevo campo para stock en viaje vendido
 
             // imagenes videos proveedores
             $table->string('imagen_principal')->nullable(); // URL de la imagen principal
@@ -59,7 +61,6 @@ return new class extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
-            // $table->decimal('calificacion_promedio', 2, 1)->default(0);
         });
     }
 

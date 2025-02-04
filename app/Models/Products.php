@@ -37,6 +37,8 @@ class Products extends Model
         'imagenes',
         'video',
         'proveedores',
+        'stock_en_viaje',
+        'stock_en_viaje_vendido',
     ];
 
     protected $guarded = [];
@@ -54,4 +56,9 @@ class Products extends Model
     {
         return $this->belongsTo(Subcategory::class);
     }
+
+    public function pedidos()
+{
+    return $this->hasMany(Pedido::class);
+}
 }

@@ -11,6 +11,7 @@ use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\BackupsController;
 use App\Http\Controllers\SalesController;
+use App\Http\Controllers\PedidosController;
 
 use App\Models\Categories;
 // Rutas no autenticadas
@@ -38,10 +39,12 @@ Route::middleware([
     Route::resource('/history', HistoryController::class)->only(['index']);
     Route::resource('/backups', BackupsController::class);
     Route::resource('/sales', SalesController::class);
+    Route::resource('/pedidos', PedidosController::class);
     Route::post('/backups/{id}/restore', [BackupsController::class, 'restore'])->name('backups.restore');
     Route::post('/backups/createBackup', [BackupsController::class, 'createBackup'])->name('backups.createBackup');
     Route::put('/sales/{sale}/estado', [SalesController::class, 'updateEstado'])->name('sales.updateEstado');
     Route::get('/ofertas', [ProductsController::class, 'ofertas'])->name('ofertas');
+    Route::patch('/pedidos/{pedido}/transfer', [PedidosController::class, 'transfer'])->name('pedidos.transfer');
 
     // Route::delete('products/{producto}/imagen_principal', [ProductsController::class, 'deleteMainPhoto'])->name('products.deleteMainPhoto');
 

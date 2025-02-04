@@ -44,6 +44,8 @@ const form = useForm({
     stock: props.producto.stock,
     contador_ventas: props.producto.contador_ventas,
     stock_real: props.producto.stock_real,
+    stock_en_viaje: props.producto.stock_en_viaje,
+    stock_en_viaje_vendido: props.producto.stock_en_viaje_vendido,
     stock_minimo: props.producto.stock_minimo,
     stock_maximo: props.producto.stock_maximo,
     imagen_principal: props.producto.imagen_principal,

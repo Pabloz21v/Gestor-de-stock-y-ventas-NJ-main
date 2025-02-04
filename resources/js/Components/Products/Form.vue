@@ -11,7 +11,7 @@ import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import { Link, router } from "@inertiajs/vue3";
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 const props = defineProps({
 	form: {
@@ -103,6 +103,14 @@ const removeProveedor = (index) => {
 const updateProveedores = () => {
 	props.form.proveedores = JSON.stringify(proveedoresList.value);
 };
+
+const totalStock = computed(() => {
+	return (
+		parseInt(props.form.stock_real || 0) +
+		parseInt(props.form.stock_en_viaje || 0) +
+		parseInt(props.form.stock_en_viaje_vendido || 0)
+	);
+});
 </script>
 
 <template>
@@ -196,6 +204,17 @@ const updateProveedores = () => {
 				<InputLabel for="stock_real" value="Stock Real" class="mt-2 block w-full" />
 				<TextInput id="stock_real" v-model="props.form.stock_real" type="number" class="mt-1 block w-full" />
 				<InputError :message="$page.props.errors.stock_real" class="mt-0" />
+
+				<InputLabel for="stock_en_viaje" value="Stock en Viaje" class="mt-2 block w-full" />
+				<TextInput id="stock_en_viaje" v-model="props.form.stock_en_viaje" type="number" class="mt-1 block w-full" />
+				<InputError :message="$page.props.errors.stock_en_viaje" class="mt-0" />
+
+				<InputLabel for="stock_en_viaje_vendido" value="Stock en Viaje Vendido" class="mt-2 block w-full" />
+				<TextInput id="stock_en_viaje_vendido" v-model="props.form.stock_en_viaje_vendido" type="number" class="mt-1 block w-full" />
+				<InputError :message="$page.props.errors.stock_en_viaje_vendido" class="mt-0" />
+
+				<InputLabel for="stock_total" value="Stock Total" class="mt-2 block w-full" />
+				<TextInput id="stock_total" :value="totalStock" type="number" class="mt-1 block w-full" disabled />
 
 				<InputLabel for="stock_minimo" value="Stock Mínimo" class="mt-2 block w-full" />
 				<TextInput id="stock_minimo" v-model="props.form.stock_minimo" type="number"

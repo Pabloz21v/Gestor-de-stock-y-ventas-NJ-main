@@ -45,6 +45,8 @@ class ProductRequest extends FormRequest
             'stock_minimo' => 'integer',
             'stock_maximo' => 'integer',
             'proveedores' => 'nullable',
+            'stock_en_viaje' => 'integer|min:0',
+            'stock_en_viaje_vendido' => 'integer|min:0',
         ];
 
         if ($this->isMethod('post') || $this->hasFile('imagen_principal')) {
