@@ -123,10 +123,10 @@ const totalStock = computed(() => {
 			{{ updating ? form.id : "" }}
 		</template>
 		<template #form>
-			<img :src="'/storage/' + props.form.imagen_principal" alt="" srcset="">
+			<!-- <img :src="'/storage/' + props.form.imagen_principal" alt="" srcset="">
 			<img src="../../../../storage/app/public/photos/7493Rq1hgGphZYnT9FTDmD86Vwoqq6MHPO5rzW7i.jpg" alt=""
 				srcset="">
-			{{ props.form.imagen_principal }}
+			{{ props.form.imagen_principal }} -->
 
 			<div class="col-span-6 sm:col-span-6">
 				<InputLabel for="visible" value="Visible" />
@@ -206,11 +206,13 @@ const totalStock = computed(() => {
 				<InputError :message="$page.props.errors.stock_real" class="mt-0" />
 
 				<InputLabel for="stock_en_viaje" value="Stock en Viaje" class="mt-2 block w-full" />
-				<TextInput id="stock_en_viaje" v-model="props.form.stock_en_viaje" type="number" class="mt-1 block w-full" />
+				<TextInput id="stock_en_viaje" v-model="props.form.stock_en_viaje" type="number"
+					class="mt-1 block w-full" />
 				<InputError :message="$page.props.errors.stock_en_viaje" class="mt-0" />
 
 				<InputLabel for="stock_en_viaje_vendido" value="Stock en Viaje Vendido" class="mt-2 block w-full" />
-				<TextInput id="stock_en_viaje_vendido" v-model="props.form.stock_en_viaje_vendido" type="number" class="mt-1 block w-full" />
+				<TextInput id="stock_en_viaje_vendido" v-model="props.form.stock_en_viaje_vendido" type="number"
+					class="mt-1 block w-full" />
 				<InputError :message="$page.props.errors.stock_en_viaje_vendido" class="mt-0" />
 
 				<InputLabel for="stock_total" value="Stock Total" class="mt-2 block w-full" />
@@ -252,7 +254,8 @@ const totalStock = computed(() => {
 
 				<InputLabel for="proveedores" value="Proveedores" class="mt-2 block w-full" />
 				<div v-for="(proveedor, index) in proveedoresList" :key="index" class="flex items-center gap-2">
-					<TextInput v-model="proveedoresList[index]" type="text" class="mt-1 block w-full" @input="updateProveedores" />
+					<TextInput v-model="proveedoresList[index]" type="text" class="mt-1 block w-full"
+						@input="updateProveedores" />
 					<a :href="proveedoresList[index]" target="_blank" class="text-blue-500 hover:underline">Abrir</a>
 					<button type="button" @click="removeProveedor(index)">Eliminar</button>
 				</div>
