@@ -27,7 +27,8 @@ class PedidoRequest extends FormRequest
             'stock_en_viaje' => 'nullable|integer|min:0',
             'stock_en_viaje_vendido' => 'nullable|integer|min:0',
             'proveedor' => 'nullable|string|max:255',
-            'web' => 'nullable|string|max:255',
+            // 'web' => 'nullable|string|max:255',
+            'web' => 'nullable|url|max:255'
         ];
     }
 }

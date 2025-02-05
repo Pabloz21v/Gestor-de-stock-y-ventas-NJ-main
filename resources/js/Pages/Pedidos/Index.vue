@@ -84,7 +84,7 @@ const deletePedido = () => {
 // Función para transferencias desde la tabla
 const moveStock = async (pedido, action) => {
     if (!action) return;
-    
+
     let amount;
 
     if (action === 'all_to_real') {
@@ -193,7 +193,17 @@ const moveStockInModal = (destination, source) => {
                                             <option value="all_to_real">Mover Todo a Real</option>
                                         </select>
                                     </td>
-                                    <td class="border px-4 py-2">{{ pedido.proveedor }}</td>
+                                    <td class="border px-4 py-2">
+                                        <a 
+                                            :href="pedido.web" 
+                                            target="_blank"
+                                            class="text-blue-600 hover:text-blue-800 underline"
+                                            v-if="pedido.web"
+                                        >
+                                            {{ pedido.proveedor }}
+                                        </a>
+                                        <span v-else>{{ pedido.proveedor }}</span>
+                                    </td>
                                     <td class="border px-4 py-2">
                                         <button @click="openModalEdit(pedido)"
                                             class="bg-yellow-500 text-white px-4 py-2 rounded">Editar</button>
