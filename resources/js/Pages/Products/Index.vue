@@ -227,6 +227,7 @@ const deleteProducts = id => {
                             <table class="min-w-full bg-white">
                                 <thead>
                                     <tr>
+                                        <th class="w-1/6 px-4 py-2">Imagen</th>
                                         <th class="w-2/6 px-4 py-2">Producto</th>
                                         <th class="w-1/6 px-4 py-2 hidden sm:table-cell">Subcategoria</th>
                                         <th class="w-1/6 px-4 py-2 hidden sm:table-cell">Categoria</th>
@@ -238,9 +239,12 @@ const deleteProducts = id => {
                                 </thead>
                                 <tbody>
                                     <tr v-for="producto in filteredProducts" :key="producto.id">
-                                        <td class="border  ">
+                                        <td class="border px-4 py-2">
+                                            <img :src="`/storage/${producto?.data?.imagen_principal}`" alt="Imagen Principal" class="w-16 h-16 object-cover"/>
+                                            </td>
+                                        <td class="border">
                                             <p class="text-sm font-semibold leading-6 text-gray-900">
-                                            <div class="bg-white p-4  divide-y divide-dashed">
+                                            <div class="bg-white p-4 divide-y divide-dashed">
                                                 <div class="flex justify-between">
                                                     <div class="font-bold text-gray-700">{{ producto.data.name }}</div>
                                                     <div class="text-gray-700">${{ producto.data.price }}</div>
@@ -420,14 +424,13 @@ const deleteProducts = id => {
                                     <p class="text-sm text-gray-500"><strong>Imagen Principal:</strong> <img
                                             :src="`/storage/${modalProductData?.data?.imagen_principal}`"
                                             alt="Imagen Principal" /></p>
-                                    <p class="text-sm text-gray-500"><strong>Imágenes:</strong></p>
-                                    <div v-for="(img, index) in JSON.parse(modalProductData?.data?.imagenes || '[]')"
+                                    <p v-if="modalProductData?.data?.imagenes" class="text-sm text-gray-500"><strong>Imágenes:</strong></p>
+                                    <div v-if="modalProductData?.data?.imagenes" v-for="(img, index) in JSON.parse(modalProductData?.data?.imagenes || '[]')"
                                         :key="index">
                                         <img :src="`/storage/${img}`" alt="Imagen" />
                                     </div>
-                                    <p class="text-sm text-gray-500"><strong>Video:</strong> <video
+                                    <p v-if="modalProductData?.data?.video" class="text-sm text-gray-500"><strong>Video:</strong> <video
                                             :src="`/storage/${modalProductData?.data?.video}`" controls></video></p>
-
                                 </div>
                             </div>
                         </div>
