@@ -75,15 +75,7 @@ const previewVideo = ref(props.producto.video ? `/storage/${props.producto.video
                         <div class="p-6 bg-white border-b border-gray-200">
                             <ProductsForm :updating="true" :form="form" :categories="categories"
                                 :subcategories="subcategories" :preview-imagen-principal="previewImagenPrincipal"
-                                :preview-imagenes="previewImagenes" :preview-video="previewVideo" @submit="form.put(route('products.update', producto.id), {
-                                    onSuccess: () => {
-                                        // Redireccionar solo después de que los datos se hayan guardado correctamente
-                                        Inertia.visit(route('products.index'));
-                                    },
-                                    onError: () => {
-                                        // Manejar errores si es necesario
-                                    }
-                                })" />
+                                :preview-imagenes="previewImagenes" :preview-video="previewVideo" @submit="form.put(route('products.update', producto.id), )" />
                         </div>
                     </div>
                 </div>
