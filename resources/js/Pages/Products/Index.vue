@@ -10,7 +10,8 @@ import { Link } from '@inertiajs/vue3'
 import { Inertia } from '@inertiajs/inertia'
 import { ref, computed, watch } from 'vue';
 import Spinner from './../../Components/Spinner/Spinner.vue';
-// import { usePage } from '@inertiajs/vue3';
+import ModalDelete from './Modals/ModalDelete.vue';
+import ModalView from './Modals/ModalView.vue';
 
 const props = defineProps({
     products: {
@@ -43,8 +44,6 @@ const totalStock = computed(() => {
     );
 });
 
-// const products = ref(props.products);
-// const {  inertia } = usePage();
 const products = computed(() => props.products);
 const categories = computed(() => props.categories);
 const subcategories = computed(() => props.subcategories);
@@ -92,65 +91,66 @@ watch(showModalView, (newVal) => {
     }
 });
 
-const filters = ref({
-    category_id: props.filters.categories_id || '',
-    subcategory_id: props.filters.subcategory_id || '',
-    search: props.filters.search || '',
-});
+// Eliminar lógica de filtros
+// const filters = ref({
+//     category_id: props.filters.categories_id || '',
+//     subcategory_id: props.filters.subcategory_id || '',
+//     search: props.filters.search || '',
+// });
 
-const clearFilters = () => {
-    filters.value.category_id = '';
-    filters.value.subcategory_id = '';
-    filters.value.search = '';
-    applyFilters();
-};
+// const clearFilters = () => {
+//     filters.value.category_id = '';
+//     filters.value.subcategory_id = '';
+//     filters.value.search = '';
+//     applyFilters();
+// };
 
-const filteredSubcategories = computed(() => {
-    if (!filters.value.category_id) {
-        return subcategories.value;
-    }
-    return subcategories.value.filter(subcategory => subcategory.category_id === parseInt(filters.value.category_id));
-});
+// const filteredSubcategories = computed(() => {
+//     if (!filters.value.category_id) {
+//         return subcategories.value;
+//     }
+//     return subcategories.value.filter(subcategory => subcategory.category_id === parseInt(filters.value.category_id));
+// });
 
-const applyFilters = () => {
-    isLoading.value = true;
-    Inertia.get(route('products.index'), filters.value, {
-        onSuccess: () => {
-            isLoading.value = false;
-        },
-        onError: () => {
-            isLoading.value = false;
-        },
-        preserveState: true,
-        replace: true,
-    });
-};
+// const applyFilters = () => {
+//     isLoading.value = true;
+//     Inertia.get(route('products.index'), filters.value, {
+//         onSuccess: () => {
+//             isLoading.value = false;
+//         },
+//         onError: () => {
+//             isLoading.value = false;
+//         },
+//         preserveState: true,
+//         replace: true,
+//     });
+// };
 
-const filteredCategories = computed(() => {
-    if (!filters.value.category_id) {
-        return categories.value;
-    }
-    return categories.value.filter(category => category.id === parseInt(filters.value.category_id));
-});
+// const filteredCategories = computed(() => {
+//     if (!filters.value.category_id) {
+//         return categories.value;
+//     }
+//     return categories.value.filter(category => category.id === parseInt(filters.value.category_id));
+// });
 
-watch(filters, () => {
-    applyFilters();
-});
+// watch(filters, () => {
+//     applyFilters();
+// });
 
-
-// elimina los acentos del buscador
 const removeAccents = (str) => {
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 };
 
 const filteredProducts = computed(() => {
     return products.value.filter(product => {
-        const matchesCategory = !filters.value.category_id || product.category_id === parseInt(filters.value.category_id);
-        const matchesSubcategory = !filters.value.subcategory_id || product.data.subcategory_id === parseInt(filters.value.subcategory_id);
-        const search = filters.value.search ? removeAccents(filters.value.search.toLowerCase()) : '';
-        const productName = removeAccents(product.data.name.toLowerCase());
-        const matchesSearch = !search || productName.includes(search);
-        return matchesCategory && matchesSubcategory && matchesSearch;
+        // Eliminar lógica de filtros
+        // const matchesCategory = !filters.value.category_id || product.category_id === parseInt(filters.value.category_id);
+        // const matchesSubcategory = !filters.value.subcategory_id || product.data.subcategory_id === parseInt(filters.value.subcategory_id);
+        // const search = filters.value.search ? removeAccents(filters.value.search.toLowerCase()) : '';
+        // const productName = removeAccents(product.data.name.toLowerCase());
+        // const matchesSearch = !search || productName.includes(search);
+        // return matchesCategory && matchesSubcategory && matchesSearch;
+        return true;
     });
 });
 
@@ -176,8 +176,10 @@ const deleteProducts = id => {
         onError: () => {
             isLoading.value = false;
         }
-    })
+    });
 }
+
+const isLoading = ref(false);
 </script>
 
 <template>
@@ -191,7 +193,8 @@ const deleteProducts = id => {
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div class="flex flex-col lg:flex-row justify-between items-center mb-4">
                         <span class="text-lg font-semibold">Productos</span>
-                        <form @submit.prevent="applyFilters"
+                        <!-- Eliminar formulario de filtros -->
+                        <!-- <form @submit.prevent="applyFilters"
                             class="w-full md:w-auto flex flex-col md:flex-row items-start md:items-center gap-2 mt-4 md:mt-0">
                             <select v-model="filters.category_id" @change="applyFilters"
                                 class="border rounded px-3 pr-8 py-1 w-full md:w-auto">
@@ -212,7 +215,7 @@ const deleteProducts = id => {
                             <button type="button" @click="clearFilters"
                                 class="bg-gray-500 text-white px-4 py-2 rounded">Limpiar
                                 filtros</button>
-                        </form>
+                        </form> -->
                         <Link v-if="$page.props.user.permissions.includes(
                             'create roles'
                         )" :href="route('products.create')"
@@ -240,8 +243,9 @@ const deleteProducts = id => {
                                 <tbody>
                                     <tr v-for="producto in filteredProducts" :key="producto.id">
                                         <td class="border px-4 py-2">
-                                            <img :src="`/storage/${producto?.data?.imagen_principal}`" alt="Imagen Principal" class="w-16 h-16 object-cover"/>
-                                            </td>
+                                            <img :src="`/storage/${producto.data.imagen_principal}`"
+                                                alt="Imagen Principal" class="w-16 h-16 object-cover" />
+                                        </td>
                                         <td class="border">
                                             <p class="text-sm font-semibold leading-6 text-gray-900">
                                             <div class="bg-white p-4 divide-y divide-dashed">
@@ -317,130 +321,11 @@ const deleteProducts = id => {
         <Spinner v-if="isLoading" />
 
         <!-- Modal delete-->
-        <div v-if="showModalDelete" class="fixed z-10 inset-0 overflow-y-auto">
-            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-                    <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-                </div>
-                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-                <div
-                    class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <div class="sm:flex sm:items-start">
-                            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                                <h3 class="text-lg leading-6 font-medium text-gray-900">Eliminar Producto</h3>
-                                <div class="mt-2">
-                                    <p class="text-sm text-gray-500">
-                                        Se eliminará el producto seleccionado
-                                    </p>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                        <button @click="closeModal" type="button"
-                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 my-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">Cancelar</button>
-
-                        <button @click="deleteProducts(modalDataID)" type="button"
-                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 my-2 py-2 bg-red-600 shadow-lg shadow-red-600 hover:bg-red-700 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">Eliminar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <ModalDelete v-if="showModalDelete" :closeModal="closeModal" :deleteProducts="deleteProducts"
+            :modalDataID="modalDataID" />
 
         <!-- Modal view product-->
-        <div v-if="showModalView" class="fixed z-10 inset-0 overflow-y-auto">
-            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-                    <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-                </div>
-                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-                <div
-                    class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <div class="sm:flex sm:items-start">
-                            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                                <h3 class="text-lg leading-6 font-medium text-gray-900">Detalles del Producto</h3>
-                                <div class="mt-2">
-                                    <p class="text-sm text-gray-500"><strong>Nombre:</strong> {{
-                                        modalProductData?.data?.name }}</p>
-                                    <p class="text-sm text-gray-500"><strong>Descripción:</strong> {{
-                                        modalProductData?.data?.description }}</p>
-                                    <p class="text-sm text-gray-500"><strong>Costo:</strong> {{
-                                        modalProductData?.data?.price
-                                    }}</p>
-                                    <p class="text-sm text-gray-500"><strong>Mark Up (valor se lleva a %):</strong> {{
-                                        modalProductData?.data?.ganancia }}%</p>
-                                    <p class="text-sm text-gray-500"><strong>Descuento:</strong> {{
-                                        modalProductData?.data?.descuento }}</p>
-                                    <p class="text-sm text-gray-500"><strong>Oferta:</strong> {{
-                                        modalProductData?.data?.oferta
-                                            ? 'Sí' : 'No' }}</p>
-                                    <p class="text-sm text-gray-500"><strong>Detalles:</strong> {{
-                                        modalProductData?.data?.detalles }}</p>
-                                    <p class="text-sm text-gray-500"><strong>Marca:</strong> {{
-                                        modalProductData?.data?.marca }}
-                                    </p>
-                                    <p class="text-sm text-gray-500"><strong>Tamaño:</strong> {{
-                                        modalProductData?.data?.tamaño
-                                    }}</p>
-                                    <p class="text-sm text-gray-500"><strong>Color:</strong> {{
-                                        modalProductData?.data?.color }}
-                                    </p>
-                                    <p class="text-sm text-gray-500"><strong>Peso:</strong> {{
-                                        modalProductData?.data?.peso }}
-                                    </p>
-                                    <p class="text-sm text-gray-500"><strong>Dimensiones:</strong> {{
-                                        modalProductData?.data?.dimensiones }}</p>
-                                    <p class="text-sm text-gray-500"><strong>Stock:</strong> {{
-                                        modalProductData?.data?.stock }}
-                                    </p>
-                                    <p class="text-sm text-gray-500"><strong>Contador de Ventas:</strong> {{
-                                        modalProductData?.data?.contador_ventas }}</p>
-                                    <p class="text-sm text-gray-500"><strong>Stock Real:</strong> {{
-                                        modalProductData?.data?.stock_real }}</p>
-                                    <p class="text-sm text-gray-500"><strong>Stock en Viaje:</strong> {{
-                                        modalProductData?.data?.stock_en_viaje }}</p>
-                                    <p class="text-sm text-gray-500"><strong>Stock en Viaje Vendido:</strong> {{
-                                        modalProductData?.data?.stock_en_viaje_vendido }}</p>
-                                    <p class="text-sm text-gray-500"><strong>Stock Total:</strong> {{
-                                        totalStock }}</p>
-                                    <p class="text-sm text-gray-500"><strong>Stock Mínimo:</strong> {{
-                                        modalProductData?.data?.stock_minimo }}</p>
-                                    <p class="text-sm text-gray-500"><strong>Stock Máximo:</strong> {{
-                                        modalProductData?.data?.stock_maximo }}</p>
-                                    <p class="text-sm text-gray-500"><strong>Visible:</strong> {{
-                                        modalProductData?.data?.visible ? 'Sí' : 'No' }}</p>
-                                    <p class="text-sm text-gray-500"><strong>Proveedores:</strong></p>
-                                    <ul class="list-disc list-inside pl-4">
-                                        <li v-for="(proveedor, index) in JSON.parse(modalProductData?.data?.proveedores || '[]')"
-                                            :key="index" class="mb-1">
-                                            <a :href="proveedor" target="_blank"
-                                                class="text-blue-500 hover:underline">{{
-                                                proveedor }}</a>
-                                        </li>
-                                    </ul>
-                                    <p class="text-sm text-gray-500"><strong>Imagen Principal:</strong> <img
-                                            :src="`/storage/${modalProductData?.data?.imagen_principal}`"
-                                            alt="Imagen Principal" /></p>
-                                    <p v-if="modalProductData?.data?.imagenes" class="text-sm text-gray-500"><strong>Imágenes:</strong></p>
-                                    <div v-if="modalProductData?.data?.imagenes" v-for="(img, index) in JSON.parse(modalProductData?.data?.imagenes || '[]')"
-                                        :key="index">
-                                        <img :src="`/storage/${img}`" alt="Imagen" />
-                                    </div>
-                                    <p v-if="modalProductData?.data?.video" class="text-sm text-gray-500"><strong>Video:</strong> <video
-                                            :src="`/storage/${modalProductData?.data?.video}`" controls></video></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                        <button @click="closeModal" type="button"
-                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 my-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">Cerrar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <ModalView v-if="showModalView" :closeModal="closeModal" :modalProductData="modalProductData"
+            :totalStock="totalStock" />
     </AppLayout>
 </template>

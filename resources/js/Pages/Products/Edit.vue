@@ -9,6 +9,7 @@ import { useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import ProductsForm from "@/Components/Products/Form.vue";
+import { Inertia } from '@inertiajs/inertia';
 
 const props = defineProps({
     producto: {
@@ -26,12 +27,12 @@ const props = defineProps({
 });
 const form = useForm({
     id: props.producto.id,
-    category_id: props.producto.category_id,
-    subcategory_id: props.producto.subcategory_id,
+    category_id: String(props.producto.category_id),
+    subcategory_id: String(props.producto.subcategory_id),
     visible: props.producto.visible,
-    price: props.producto.price,
-    ganancia: props.producto.ganancia,
-    descuento: props.producto.descuento,
+    price: String(props.producto.price),
+    ganancia: String(props.producto.ganancia),
+    descuento: String(props.producto.descuento),
     oferta: props.producto.oferta,
     name: props.producto.name,
     description: props.producto.description,
@@ -41,13 +42,13 @@ const form = useForm({
     color: props.producto.color,
     peso: props.producto.peso,
     dimensiones: props.producto.dimensiones,
-    stock: props.producto.stock,
-    contador_ventas: props.producto.contador_ventas,
-    stock_real: props.producto.stock_real,
-    stock_en_viaje: props.producto.stock_en_viaje,
-    stock_en_viaje_vendido: props.producto.stock_en_viaje_vendido,
-    stock_minimo: props.producto.stock_minimo,
-    stock_maximo: props.producto.stock_maximo,
+    stock: String(props.producto.stock),
+    contador_ventas: String(props.producto.contador_ventas),
+    stock_real: String(props.producto.stock_real),
+    stock_en_viaje: String(props.producto.stock_en_viaje),
+    stock_en_viaje_vendido: String(props.producto.stock_en_viaje_vendido),
+    stock_minimo: String(props.producto.stock_minimo),
+    stock_maximo: String(props.producto.stock_maximo),
     imagen_principal: props.producto.imagen_principal,
     imagenes: props.producto.imagenes,
     video: props.producto.video,
@@ -55,7 +56,7 @@ const form = useForm({
 });
 
 const previewImagenPrincipal = ref(props.producto.imagen_principal ? `/storage/${props.producto.imagen_principal}` : null);
-const previewImagenes = ref(Array.isArray(props.producto.imagenes) ? props.producto.imagenes.map(img => `/storage/${img}`) : []);
+const previewImagenes = ref(Array.isArray(props.producto.imagenes) ? JSON.parse(props.producto.imagenes).map(img => `/storage/${img}`) : []);
 const previewVideo = ref(props.producto.video ? `/storage/${props.producto.video}` : null);
 </script>
 
@@ -74,8 +75,15 @@ const previewVideo = ref(props.producto.video ? `/storage/${props.producto.video
                         <div class="p-6 bg-white border-b border-gray-200">
                             <ProductsForm :updating="true" :form="form" :categories="categories"
                                 :subcategories="subcategories" :preview-imagen-principal="previewImagenPrincipal"
-                                :preview-imagenes="previewImagenes" :preview-video="previewVideo"
-                                @submit="form.put(route('products.update', producto.id))" />
+                                :preview-imagenes="previewImagenes" :preview-video="previewVideo" @submit="form.put(route('products.update', producto.id), {
+                                    onSuccess: () => {
+                                        // Redireccionar solo después de que los datos se hayan guardado correctamente
+                                        Inertia.visit(route('products.index'));
+                                    },
+                                    onError: () => {
+                                        // Manejar errores si es necesario
+                                    }
+                                })" />
                         </div>
                     </div>
                 </div>

@@ -28,16 +28,6 @@ class ProductsController extends Controller
             $query->orderBy('name');
         }])->orderBy('orden');
 
-        if ($request->filled('category_id')) {
-            $query->where('id', $request->category_id);
-        }
-
-        if ($request->filled('subcategory_id')) {
-            $query->whereHas('subcategories', function ($q) use ($request) {
-                $q->where('id', $request->subcategory_id);
-            });
-        }
-
         $categories = $query->get();
         $filteredCategories = [];
         $filteredSubcategories = [];
@@ -62,7 +52,6 @@ class ProductsController extends Controller
             'categories' => $filteredCategories,
             'subcategories' => $filteredSubcategories,
             'products' => $filteredProducts,
-            'filters' => $request->only(['categories_id', 'subcategory_id', 'search'])
         ]);
     }
 
@@ -134,21 +123,20 @@ class ProductsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProductRequest $request, $productoID)
+    public function update(ProductRequest $request, $id)
     {
-        $products = Products::find($productoID);
+        $products = Products::find($id);
         $oldData = $products->toArray();
         $user = Auth::user();
         $fullname = $user->apellido . " " . $user->name;
 
         // Obtener el category_id correspondiente al subcategory_id
-        $subcategoryId = $request->input('subcategory_id');
+        $subcategoryId = $products->subcategory_id;
         $subcategory = Subcategory::find($subcategoryId);
         $category_id = $subcategory->categories_id;
 
         // Actualizar el category_id en el modelo
         $request->merge(['category_id' => $category_id]);
-
 
         if ($request->hasFile('imagen_principal')) {
             if ($products->imagen_principal) {
@@ -171,7 +159,6 @@ class ProductsController extends Controller
             }
             $products->imagenes = json_encode($imagenes);
         }
-
 
         $products->fill($request->except(['imagen_principal', 'video', 'imagenes']));
         $products->save();

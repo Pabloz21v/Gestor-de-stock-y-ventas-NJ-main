@@ -19,12 +19,6 @@ Route::get('/', [DashboardController::class, 'index']);
 Route::permanentRedirect('/register', '/');
 
 
-// Route::get('/', function () {
-//     $categories = Categories::with('subcategories.products')->get();
-//     return Inertia::render('Menu', ['categories' => $categories]);
-// });
-
-
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -46,9 +40,8 @@ Route::middleware([
     Route::get('/ofertas', [ProductsController::class, 'ofertas'])->name('ofertas');
     Route::patch('/pedidos/{pedido}/transfer', [PedidosController::class, 'transfer'])->name('pedidos.transfer');
 
-    // Route::delete('products/{producto}/imagen_principal', [ProductsController::class, 'deleteMainPhoto'])->name('products.deleteMainPhoto');
-
-    // Route::delete('products/{producto}/imagen-principal', [ProductsController::class, 'deleteMainPhoto'])->name('products.deleteMainPhoto');
-    // Route::delete('products/{producto}/video', [ProductsController::class, 'deleteVideo'])->name('products.deleteVideo');
-    // Route::delete('products/{producto}/imagenes/{index}', [ProductsController::class, 'deleteExtraPhoto'])->name('products.deleteExtraPhoto');
+    // Rutas para eliminar imágenes y videos
+    Route::delete('products/{producto}/imagen_principal', [ProductsController::class, 'deleteImagenPrincipal'])->name('products.deleteImagenPrincipal');
+    Route::delete('products/{producto}/video', [ProductsController::class, 'deleteVideo'])->name('products.deleteVideo');
+    Route::delete('products/{producto}/imagenes/{index}', [ProductsController::class, 'deleteImagenes'])->name('products.deleteImagenes');
 });

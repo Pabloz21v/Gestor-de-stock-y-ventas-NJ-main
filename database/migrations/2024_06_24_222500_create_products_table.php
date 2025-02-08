@@ -44,7 +44,7 @@ return new class extends Migration
 
             // imagenes videos proveedores
             $table->string('imagen_principal')->nullable(); // URL de la imagen principal
-            $table->json('imagenes')->nullable();
+            $table->json('imagenes')->nullable(); // URL de imagenes almacenadas en forma un array
             $table->string('video')->nullable(); // URL delvideo de presentación
             $table->string('proveedores')->nullable(); //   almacenar múltiples proveedores con sus URLs
 

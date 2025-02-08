@@ -79,15 +79,15 @@ const handleImagenes = (event) => {
 };
 
 const deleteImagenPrincipal = () => {
-	router.delete(route('products.deleteImagenPrincipal', props.form.id));
+	router.delete(route('products.deleteImagenPrincipal', { producto: props.form.id }));
 };
 
 const deleteVideo = () => {
-	router.delete(route('products.deleteVideo', props.form.id));
+	router.delete(route('products.deleteVideo', { producto: props.form.id }));
 };
 
 const deleteImagenes = (index) => {
-	router.delete(route('products.deleteImagenes', { products: props.form.id, index }));
+	router.delete(route('products.deleteImagenes', { producto: props.form.id, index }));
 };
 
 const addProveedor = () => {
@@ -109,7 +109,7 @@ const totalStock = computed(() => {
 		parseInt(props.form.stock_real || 0) +
 		parseInt(props.form.stock_en_viaje || 0) +
 		parseInt(props.form.stock_en_viaje_vendido || 0)
-	);
+	).toString();
 });
 </script>
 
